@@ -113,6 +113,28 @@ void Trigger_WeaponGiver::Render()
       
         break;
 
+	  case type_medi_rifle:
+	  {
+		  gdi->GreenPen();
+		  gdi->GreenBrush();
+		  const double sz = 2.0;
+		  gdi->Circle(Pos().x - sz, Pos().y, sz/2);
+		  gdi->Circle(Pos().x + sz, Pos().y, sz/2);
+		  gdi->Circle(Pos().x, Pos().y + sz, sz/2);
+		  gdi->Circle(Pos().x, Pos().y - sz, sz/2);
+		  break;
+	  }
+
+	  case type_slag_sniper:
+	  {
+		  gdi->BlackPen();
+		  gdi->PurpleBrush();
+		  gdi->Circle(Pos(), 3);
+		  gdi->ThickPurplePen();
+		  gdi->Line(Pos(), Vector2D(Pos().x, Pos().y - 9));
+		  break;
+	  }
+
     }//end switch
   }
 }

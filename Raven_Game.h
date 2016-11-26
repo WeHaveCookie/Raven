@@ -31,8 +31,7 @@ class BaseGameEntity;
 class Raven_Projectile;
 class Raven_Map;
 class GraveMarkers;
-
-
+class Raven_PathPlanner;
 
 class Raven_Game
 {
@@ -91,8 +90,10 @@ public:
   void Update();
 
   //loads an environment from a file
-  bool LoadMap(const std::string& FileName); 
+  bool LoadMap(const std::string& FileName);
 
+  void AddSlag(Raven_Bot* shooter, Vector2D target);
+  void AddMediBullet(Raven_Bot* shooter, Vector2D target);
   void AddBots(unsigned int NumBotsToAdd);
   void AddRocket(Raven_Bot* shooter, Vector2D target);
   void AddRailGunSlug(Raven_Bot* shooter, Vector2D target);

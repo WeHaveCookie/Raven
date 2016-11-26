@@ -4,7 +4,7 @@
 
 --the number of bots the game instantiates
 
-NumBots   = 3
+NumBots   = 2
 
 --this is the maximum number of search cycles allocated to *all* current path
 -- planning searches per update
@@ -133,6 +133,33 @@ Bolt_Scale       = Bot_Scale
 Bolt_Damage      = 1
 
 
+MediRifle_DefaultRounds		= 40
+MediRifle_MaxRoundsCarried	= 80
+MediRifle_FiringFreq		= 10
+MediRifle_IdealRange		= 200
+MediRifle_SoundRange 		= 50
+
+MediBullet_Damage		= -1
+MediBullet_Scale		= Bot_Scale
+MediBullet_MaxSpeed		= 5
+MediBullet_Mass			= 1
+MediBullet_MaxForce		= 20.0
+MediBullet_Element = 0
+MediBullet_Duration = 0
+
+SlagSniper_DefaultRounds	= 3
+SlagSniper_MaxRoundsCarried	= 6
+SlagSniper_FiringFreq		= 1
+SlagSniper_IdealRange		= 2000
+SlagSniper_SoundRange 		= 500
+
+Slag_Damage		= 0
+Slag_Scale		= Bot_Scale
+Slag_MaxSpeed		= 15
+Slag_Mass			= 1
+Slag_MaxForce		= 50.0
+Slag_Element = 5
+Slag_Duration = 5000
 
 RocketLauncher_FiringFreq       = 1.5
 RocketLauncher_DefaultRounds      = 15
@@ -147,6 +174,8 @@ Rocket_MaxForce    = 10.0
 Rocket_Scale       = Bot_Scale
 Rocket_Damage      = 10
 Rocket_ExplosionDecayRate = 2.0   --how fast the explosion occurs (in secs)
+Rocket_Element		= 1
+Rocket_Duration		= 7000
 
 
 RailGun_FiringFreq       = 1
@@ -160,7 +189,9 @@ Slug_Mass        = 0.1
 Slug_MaxForce    = 10000.0
 Slug_Scale       = Bot_Scale
 Slug_Persistance = 0.2
-Slug_Damage      = 10
+Slug_Damage      = 7
+Slug_Element	=  3
+Slug_Duration	= 5000
 
 
 

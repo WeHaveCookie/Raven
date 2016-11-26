@@ -16,11 +16,10 @@
 #include "game/MovingEntity.h"
 #include "misc/utils.h"
 #include "Raven_TargetingSystem.h"
-
+#include "Armory/Raven_Projectile.h"
 
 class Raven_PathPlanner;
 class Raven_Steering;
-class Raven_Game;
 class Regulator;
 class Raven_Weapon;
 struct Telegram;
@@ -28,8 +27,7 @@ class Raven_Bot;
 class Goal_Think;
 class Raven_WeaponSystem;
 class Raven_SensoryMemory;
-
-
+class Raven_Game;
 
 
 class Raven_Bot : public MovingEntity
@@ -105,6 +103,12 @@ private:
   //set to true when a human player takes over control of the bot
   bool                               m_bPossessed;
 
+  std::map<Element::Enum, double>	m_elements;
+  std::vector<Element::Enum>		m_needToBeDisplay;
+  Element::Enum						m_displayedElement;
+  double							m_timerChangeElemDisplayed; //ms
+  double							m_timerUpdateElem; // ms
+
   //a vertex buffer containing the bot's geometry
   std::vector<Vector2D>              m_vecBotVB;
   //the buffer for the transformed vertices
@@ -129,7 +133,9 @@ public:
   virtual ~Raven_Bot();
 
   //the usual suspects
+  void			ChangePenWithAffect();
   void         Render();
+  void			updateElement();
   void         Update();
   bool         HandleMessage(const Telegram& msg);
   void         Write(std::ostream&  os)const{/*not implemented*/}
@@ -142,10 +148,18 @@ public:
   //methods for accessing attribute data
   int           Health()const{return m_iHealth;}
   int           MaxHealth()const{return m_iMaxHealth;}
-  void          ReduceHealth(unsigned int val);
+  int			HealthPerc() const { return min((int)(Health() / (float)MaxHealth()) * 100, 100); }
+  void          ReduceHealth(int val);
+  void			ApplyElement(Element::Enum element, double duration);
   void          IncreaseHealth(unsigned int val);
   void          RestoreHealthToMaximum();
-
+  bool			Slagged() { return (m_elements[Element::slag] > 0);
+}
+  bool			Fired() { return (m_elements[Element::fire] > 0); }
+  bool			Frosted() { return (m_elements[Element::frost] > 0); }
+  bool			Poisonned() { return (m_elements[Element::poison] > 0); }
+  bool			Electrified() { return (m_elements[Element::electric] > 0); }
+  bool			NoElemAffect() { return !Slagged() && !Fired() && !Frosted() && !Poisonned() && !Electrified(); }
   int           Score()const{return m_iScore;}
   void          IncrementScore(){++m_iScore;}
 

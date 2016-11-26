@@ -20,10 +20,12 @@
 
 
 
+
 class  Raven_Bot;
 
 class Raven_Weapon
 {
+
 protected:
 
   //a weapon is always (in this game) carried by a bot
@@ -59,6 +61,7 @@ protected:
   //the max speed of the projectile this weapon fires
   double         m_dMaxProjectileSpeed;
 
+
   //The number of times a weapon can be discharges depends on its rate of fire.
   //This method returns true if the weapon is able to be discharged at the 
   //current time. (called from ShootAt() )
@@ -93,8 +96,10 @@ public:
                                  m_dLastDesirabilityScore(0),
                                  m_dIdealRange(IdealRange),
                                  m_dMaxProjectileSpeed(ProjectileSpeed)
+								 
   {  
     m_dTimeNextAvailable = Clock->GetCurrentTime();
+
   }
 
   virtual ~Raven_Weapon(){}

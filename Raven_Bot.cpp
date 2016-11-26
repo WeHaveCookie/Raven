@@ -11,6 +11,7 @@
 #include "time/Regulator.h"
 #include "Raven_WeaponSystem.h"
 #include "Raven_SensoryMemory.h"
+#include "Armory/Raven_Projectile.h"
 
 #include "Messaging/Telegram.h"
 #include "Raven_Messages.h"
@@ -21,6 +22,9 @@
 
 
 #include "Debug/DebugConsole.h"
+
+#define TIMER_SWITCH_ELEM_DISPLAYED 1000
+#define TIMER_UPDATE_ELEM 1000
 
 //-------------------------- ctor ---------------------------------------------
 Raven_Bot::Raven_Bot(Raven_Game* world,Vector2D pos):
@@ -49,6 +53,9 @@ Raven_Bot::Raven_Bot(Raven_Game* world,Vector2D pos):
                  m_dFieldOfView(DegsToRads(script->GetDouble("Bot_FOV")))
            
 {
+	m_timerChangeElemDisplayed = TIMER_SWITCH_ELEM_DISPLAYED;
+	m_timerUpdateElem = TIMER_UPDATE_ELEM;
+	m_displayedElement = Element::neutral;
   SetEntityType(type_bot);
 
   SetUpVertexBuffer();
@@ -116,6 +123,36 @@ void Raven_Bot::Spawn(Vector2D pos)
     RestoreHealthToMaximum();
 }
 
+void Raven_Bot::updateElement()
+{
+	m_timerUpdateElem -= 16;
+	if (m_timerUpdateElem < 0) // Update elem
+	{
+		if (Fired())
+		{
+			ReduceHealth(1);
+		}
+		if (Poisonned())
+		{
+			ReduceHealth(2);
+		}
+		m_timerUpdateElem = TIMER_UPDATE_ELEM;
+	}
+	
+	for (auto& elem : m_elements)
+	{
+		if (elem.second > 0)
+		{
+			elem.second -= 16;
+		}
+
+		if (elem.second < 0)
+		{
+			elem.second = 0;
+		}
+	}
+}
+
 //-------------------------------- Update -------------------------------------
 //
 void Raven_Bot::Update()
@@ -124,7 +161,7 @@ void Raven_Bot::Update()
   //is under user control. This is because a goal is created whenever a user 
   //clicks on an area of the map that necessitates a path planning request.
   m_pBrain->Process();
-  
+  updateElement();
   //Calculate the steering force and update the bot's velocity and position
   UpdateMovement();
 
@@ -224,12 +261,16 @@ bool Raven_Bot::HandleMessage(const Telegram& msg)
   switch(msg.Msg)
   {
   case Msg_TakeThatMF:
-
+  {
     //just return if already dead or spawning
     if (isDead() || isSpawning()) return true;
 
+	auto projInfo = static_cast<ProjectileInfo*>(msg.ExtraInfo);
+
     //the extra info field of the telegram carries the amount of damage
-    ReduceHealth(DereferenceToType<int>(msg.ExtraInfo));
+	ReduceHealth(projInfo->damage);
+
+	ApplyElement(projInfo->element, projInfo->duration);
 
     //if this bot is now dead let the shooter know
     if (isDead())
@@ -242,7 +283,7 @@ bool Raven_Bot::HandleMessage(const Telegram& msg)
     }
 
     return true;
-
+  }
   case Msg_YouGotMeYouSOB:
     
     IncrementScore();
@@ -329,8 +370,12 @@ bool Raven_Bot::RotateFacingTowardPosition(Vector2D target)
 
 
 //--------------------------------- ReduceHealth ----------------------------
-void Raven_Bot::ReduceHealth(unsigned int val)
+void Raven_Bot::ReduceHealth(int val)
 {
+	if (Slagged())
+	{
+		val *= 2;
+	}
   m_iHealth -= val;
 
   if (m_iHealth <= 0)
@@ -338,9 +383,19 @@ void Raven_Bot::ReduceHealth(unsigned int val)
     SetDead();
   }
 
+//   if (m_iHealth > m_iMaxHealth)
+//   {
+// 	  m_iHealth = m_iMaxHealth;
+//   }
+
   m_bHit = true;
 
   m_iNumUpdatesHitPersistant = (int)(FrameRate * script->GetDouble("HitFlashTime"));
+}
+
+void Raven_Bot::ApplyElement(Element::Enum element, double duration)
+{
+	m_elements[element] = duration;
 }
 
 //--------------------------- Possess -----------------------------------------
@@ -472,6 +527,54 @@ bool Raven_Bot::canStepBackward(Vector2D& PositionOfStep)const
   return canWalkTo(PositionOfStep);
 }
 
+void Raven_Bot::ChangePenWithAffect()
+{
+	m_timerChangeElemDisplayed -= 16;
+	if (NoElemAffect())
+	{
+		m_displayedElement = Element::neutral;
+	} else if (m_timerChangeElemDisplayed <= 0)
+	{
+		int counter = 0;
+		m_displayedElement += 1;
+		for (m_displayedElement; counter < (int)m_elements.size(); m_displayedElement+=1)
+		{
+			if (m_elements[m_displayedElement] > 0 )
+			{
+				break;
+			}
+			counter++;
+		}
+
+		m_timerChangeElemDisplayed = TIMER_SWITCH_ELEM_DISPLAYED;
+	}
+	
+	
+	
+	switch (m_displayedElement)
+	{
+	case Element::fire:
+		gdi->RedBrush();
+		break;
+	case Element::frost:
+		gdi->WhiteBrush();
+		break;
+	case Element::poison:
+		gdi->GreenBrush();
+		break;
+	case Element::electric:
+		gdi->BlueBrush();
+		break;
+	case Element::slag:
+		gdi->PurpleBrush();
+		break;
+	case Element::neutral:
+		gdi->BrownBrush();
+	default:
+		break;
+	}
+}
+
 //--------------------------- Render -------------------------------------
 //
 //------------------------------------------------------------------------
@@ -496,8 +599,9 @@ void Raven_Bot::Render()
 
   gdi->ClosedShape(m_vecBotVBTrans);
   
+  ChangePenWithAffect();
   //draw the head
-  gdi->BrownBrush();
+  
   gdi->Circle(Pos(), 6.0 * Scale().x);
 
 

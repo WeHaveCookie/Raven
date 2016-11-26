@@ -102,7 +102,7 @@ void Pellet::TestForImpact()
                               m_iShooterID,
                               hit->ID(),
                               Msg_TakeThatMF,
-                              (void*)&m_iDamageInflicted);
+                              (void*)&m_info);
 }
 
 //-------------------------- Render -------------------------------------------

@@ -17,6 +17,8 @@ enum
   goal_get_shotgun,
   goal_get_rocket_launcher,
   goal_get_railgun,
+  goal_get_medi_rifle,
+  goal_get_slag_sniper,
   goal_wander,
   goal_negotiate_door,
   goal_attack_target,

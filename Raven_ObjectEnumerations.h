@@ -6,19 +6,21 @@
 
 enum 
 {
-  type_wall,
-  type_bot,
-  type_unused,
-  type_waypoint,
-  type_health,
-  type_spawn_point,
-  type_rail_gun,
-  type_rocket_launcher,
-  type_shotgun,
-  type_blaster,
-  type_obstacle,
-  type_sliding_door,
-  type_door_trigger
+  type_wall, // 0
+  type_bot, // 1
+  type_unused, // 2
+  type_waypoint, // 3
+  type_health, // 4
+  type_spawn_point, // 5
+  type_rail_gun, // 6
+  type_rocket_launcher, // 7
+  type_shotgun, // 8
+  type_blaster, // 9
+  type_obstacle, // 10
+  type_sliding_door, // 11
+  type_door_trigger, // 12
+  type_medi_rifle, // 13
+  type_slag_sniper // 14
 };
 
 
@@ -48,6 +50,13 @@ inline std::string GetNameOfType(int w)
   case type_spawn_point:
     
     s = "Spawn Point"; break;
+
+  case type_medi_rifle:
+
+	  s = "MediRifle"; break;
+
+  case type_slag_sniper:
+	  s = "SlagSniper"; break;
 
   case type_rail_gun:
     
