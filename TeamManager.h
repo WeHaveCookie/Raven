@@ -26,5 +26,10 @@ public:
 	void SetNumTeam(int nb) { m_NumberOfTeam = nb; }
 
 	int getColor(int team);
+
+	std::vector<Raven_Bot*> getAlly(int team) { return m_Team->at(team); }
+	int getSizeTeam(int team) { return m_Team->at(team).size(); }
+
+	Raven_Bot* getLowestEnnemiesHealth(int team);
 };
 

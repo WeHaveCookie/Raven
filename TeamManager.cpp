@@ -43,3 +43,24 @@ int TeamManager::getColor(int team)
 {
 	return (offsetColor + team) % gdi->NumPenColors();
 }
+
+Raven_Bot * TeamManager::getLowestEnnemiesHealth(int team)
+{
+	Raven_Bot* tmp = m_Team->at((team + 1) % m_NumberOfTeam).front();
+
+	std::map<int, std::vector<Raven_Bot*>>::iterator it = m_Team->begin();
+	for (it; it != m_Team->end(); ++it)
+	{
+		if (it->first != team)
+		{
+			for each (Raven_Bot* var in it->second)
+			{
+				if (tmp->Health() > var->Health())
+				{
+					tmp = var;
+				}
+			}
+		}
+	}
+	return tmp;
+}
