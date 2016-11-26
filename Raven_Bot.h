@@ -30,78 +30,71 @@ class Raven_SensoryMemory;
 class Raven_Game;
 
 
+
 class Raven_Bot : public MovingEntity
 {
 private:
 
-  enum Status{alive, dead, spawning};
+	enum Status { alive, dead, spawning };
 
 private:
 
-  //alive, dead or spawning?
-  Status                             m_Status;
+	//alive, dead or spawning?
+	Status                             m_Status;
 
-  //a pointer to the world data
-  Raven_Game*                        m_pWorld;
+	//a pointer to the world data
+	Raven_Game*                        m_pWorld;
 
-  //this object handles the arbitration and processing of high level goals
-  Goal_Think*                        m_pBrain;
+	//this object handles the arbitration and processing of high level goals
+	Goal_Think*                        m_pBrain;
 
-  //this is a class that acts as the bots sensory memory. Whenever this
-  //bot sees or hears an opponent, a record of the event is updated in the 
-  //memory.
-  Raven_SensoryMemory*               m_pSensoryMem;
+	//this is a class that acts as the bots sensory memory. Whenever this
+	//bot sees or hears an opponent, a record of the event is updated in the 
+	//memory.
+	Raven_SensoryMemory*               m_pSensoryMem;
 
-  //the bot uses this object to steer
-  Raven_Steering*                    m_pSteering;
+	//the bot uses this object to steer
+	Raven_Steering*                    m_pSteering;
 
-  //the bot uses this to plan paths
-  Raven_PathPlanner*                 m_pPathPlanner;
+	//the bot uses this to plan paths
+	Raven_PathPlanner*                 m_pPathPlanner;
 
-  //this is responsible for choosing the bot's current target
-  Raven_TargetingSystem*             m_pTargSys;
+	//this is responsible for choosing the bot's current target
+	Raven_TargetingSystem*             m_pTargSys;
 
-  //this handles all the weapons. and has methods for aiming, selecting and
-  //shooting them
-  Raven_WeaponSystem*                m_pWeaponSys;
+	//this handles all the weapons. and has methods for aiming, selecting and
+	//shooting them
+	Raven_WeaponSystem*                m_pWeaponSys;
 
-  //A regulator object limits the update frequency of a specific AI component
-  Regulator*                         m_pWeaponSelectionRegulator;
-  Regulator*                         m_pGoalArbitrationRegulator;
-  Regulator*                         m_pTargetSelectionRegulator;
-  Regulator*                         m_pTriggerTestRegulator;
-  Regulator*                         m_pVisionUpdateRegulator;
+	//A regulator object limits the update frequency of a specific AI component
+	Regulator*                         m_pWeaponSelectionRegulator;
+	Regulator*                         m_pGoalArbitrationRegulator;
+	Regulator*                         m_pTargetSelectionRegulator;
+	Regulator*                         m_pTriggerTestRegulator;
+	Regulator*                         m_pVisionUpdateRegulator;
 
-  //the bot's health. Every time the bot is shot this value is decreased. If
-  //it reaches zero then the bot dies (and respawns)
-  int                                m_iHealth;
-  
-  //the bot's maximum health value. It starts its life with health at this value
-  int                                m_iMaxHealth;
+	//the bot's health. Every time the bot is shot this value is decreased. If
+	//it reaches zero then the bot dies (and respawns)
+	int                                m_iHealth;
 
-  //each time this bot kills another this value is incremented
-  int                                m_iScore;
-  
-  //the direction the bot is facing (and therefore the direction of aim). 
-  //Note that this may not be the same as the bot's heading, which always
-  //points in the direction of the bot's movement
-  Vector2D                           m_vFacing;
+	//the bot's maximum health value. It starts its life with health at this value
+	int                                m_iMaxHealth;
 
-  //a bot only perceives other bots within this field of view
-  double                             m_dFieldOfView;
-  
-  //to show that a player has been hit it is surrounded by a thick 
-  //red circle for a fraction of a second. This variable represents
-  //the number of update-steps the circle gets drawn
-  int                                m_iNumUpdatesHitPersistant;
+	//each time this bot kills another this value is incremented
+	int                                m_iScore;
 
-  //set to true when the bot is hit, and remains true until 
-  //m_iNumUpdatesHitPersistant becomes zero. (used by the render method to
-  //draw a thick red circle around a bot to indicate it's been hit)
-  bool                               m_bHit;
+	//the direction the bot is facing (and therefore the direction of aim). 
+	//Note that this may not be the same as the bot's heading, which always
+	//points in the direction of the bot's movement
+	Vector2D                           m_vFacing;
 
-  //set to true when a human player takes over control of the bot
-  bool                               m_bPossessed;
+	//a bot only perceives other bots within this field of view
+	double                             m_dFieldOfView;
+
+	//to show that a player has been hit it is surrounded by a thick 
+	//red circle for a fraction of a second. This variable represents
+	//the number of update-steps the circle gets drawn
+	int                                m_iNumUpdatesHitPersistant;
 
   std::map<Element::Enum, double>	m_elements;
   std::vector<Element::Enum>		m_needToBeDisplay;
@@ -109,22 +102,33 @@ private:
   double							m_timerChangeElemDisplayed; //ms
   double							m_timerUpdateElem; // ms
 
-  //a vertex buffer containing the bot's geometry
-  std::vector<Vector2D>              m_vecBotVB;
-  //the buffer for the transformed vertices
-  std::vector<Vector2D>              m_vecBotVBTrans;
+	//set to true when the bot is hit, and remains true until 
+	//m_iNumUpdatesHitPersistant becomes zero. (used by the render method to
+	//draw a thick red circle around a bot to indicate it's been hit)
+	bool                               m_bHit;
+
+	//set to true when a human player takes over control of the bot
+	bool                               m_bPossessed;
+
+	//a vertex buffer containing the bot's geometry
+	std::vector<Vector2D>              m_vecBotVB;
+	//the buffer for the transformed vertices
+	std::vector<Vector2D>              m_vecBotVBTrans;
+
+	// index of the team
+	int 							   m_iTeam;
 
 
-  //bots shouldn't be copied, only created or respawned
-  Raven_Bot(const Raven_Bot&);
-  Raven_Bot& operator=(const Raven_Bot&);
+	//bots shouldn't be copied, only created or respawned
+	Raven_Bot(const Raven_Bot&);
+	Raven_Bot& operator=(const Raven_Bot&);
 
-  //this method is called from the update method. It calculates and applies
-  //the steering force for this time-step.
-  void          UpdateMovement();
+	//this method is called from the update method. It calculates and applies
+	//the steering force for this time-step.
+	void          UpdateMovement();
 
-  //initializes the bot's VB with its geometry
-  void          SetUpVertexBuffer();
+	//initializes the bot's VB with its geometry
+	void          SetUpVertexBuffer();
 
 
 public:

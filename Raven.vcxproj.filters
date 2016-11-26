@@ -278,6 +278,7 @@
       <Filter>Game</Filter>
     </ClCompile>
     <ClCompile Include="armory\Weapon_SlagSniper.cpp">
+    <ClCompile Include="TeamManager.cpp">
       <Filter>Game</Filter>
     </ClCompile>
   </ItemGroup>
@@ -622,6 +623,9 @@
     <ClInclude Include="armory\Projectile_MediBullet.h" />
     <ClInclude Include="armory\Projectile_Slag.h" />
     <ClInclude Include="armory\Weapon_SlagSniper.h" />
+    <ClInclude Include="TeamManager.h">
+      <Filter>Game</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="Params.lua">

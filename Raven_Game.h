@@ -26,60 +26,65 @@
 #include "Raven_Bot.h"
 #include "navigation/pathmanager.h"
 
-
+class TeamManager;
 class BaseGameEntity;
 class Raven_Projectile;
 class Raven_Map;
 class GraveMarkers;
-class Raven_PathPlanner;
+
 
 class Raven_Game
 {
 private:
 
-  //the current game map
-  Raven_Map*                       m_pMap;
- 
-  //a list of all the bots that are inhabiting the map
-  std::list<Raven_Bot*>            m_Bots;
+	//the current game map
+	Raven_Map*                       m_pMap;
 
-  //the user may select a bot to control manually. This is a pointer to that
-  //bot
-  Raven_Bot*                       m_pSelectedBot;
-  
-  //this list contains any active projectiles (slugs, rockets,
-  //shotgun pellets, etc)
-  std::list<Raven_Projectile*>     m_Projectiles;
+	//a list of all the bots that are inhabiting the map
+	std::list<Raven_Bot*>            m_Bots;
 
-  //this class manages all the path planning requests
-  PathManager<Raven_PathPlanner>*  m_pPathManager;
+	// number of bot in game
+	int								 m_iNumberBot;
+
+	//the user may select a bot to control manually. This is a pointer to that
+	//bot
+	Raven_Bot*                       m_pSelectedBot;
+
+	//this list contains any active projectiles (slugs, rockets,
+	//shotgun pellets, etc)
+	std::list<Raven_Projectile*>     m_Projectiles;
+
+	//this class manages all the path planning requests
+	PathManager<Raven_PathPlanner>*  m_pPathManager;
+
+	TeamManager * m_teamManager;
 
 
-  //if true the game will be paused
-  bool                             m_bPaused;
+	//if true the game will be paused
+	bool                             m_bPaused;
 
-  //if true a bot is removed from the game
-  bool                             m_bRemoveABot;
+	//if true a bot is removed from the game
+	bool                             m_bRemoveABot;
 
-  //when a bot is killed a "grave" is displayed for a few seconds. This
-  //class manages the graves
-  GraveMarkers*                    m_pGraveMarkers;
+	//when a bot is killed a "grave" is displayed for a few seconds. This
+	//class manages the graves
+	GraveMarkers*                    m_pGraveMarkers;
 
-  //this iterates through each trigger, testing each one against each bot
-  void  UpdateTriggers();
+	//this iterates through each trigger, testing each one against each bot
+	void  UpdateTriggers();
 
-  //deletes all entities, empties all containers and creates a new navgraph 
-  void  Clear();
+	//deletes all entities, empties all containers and creates a new navgraph 
+	void  Clear();
 
-  //attempts to position a spawning bot at a free spawn point. returns false
-  //if unsuccessful 
-  bool AttemptToAddBot(Raven_Bot* pBot);
+	//attempts to position a spawning bot at a free spawn point. returns false
+	//if unsuccessful 
+	bool AttemptToAddBot(Raven_Bot* pBot);
 
-  //when a bot is removed from the game by a user all remaining bots
-  //must be notified so that they can remove any references to that bot from
-  //their memory
-  void NotifyAllBotsOfRemoval(Raven_Bot* pRemovedBot)const;
-  
+	//when a bot is removed from the game by a user all remaining bots
+	//must be notified so that they can remove any references to that bot from
+	//their memory
+	void NotifyAllBotsOfRemoval(Raven_Bot* pRemovedBot)const;
+
 public:
   
   Raven_Game();
