@@ -540,7 +540,6 @@ void Raven_Game::GetPlayerInput()const
 //-----------------------------------------------------------------------------
 void Raven_Game::ChangeWeaponOfPossessedBot(unsigned int weapon)const
 {
-<<<<<<< HEAD
   //ensure one of the bots has been possessed
   if (m_pSelectedBot)
   {
@@ -570,31 +569,7 @@ void Raven_Game::ChangeWeaponOfPossessedBot(unsigned int weapon)const
 
     }
   }
-=======
-	//ensure one of the bots has been possessed
-	if (m_pSelectedBot)
-	{
-		switch (weapon)
-		{
-		case type_blaster:
 
-			PossessedBot()->ChangeWeapon(type_blaster); return;
-
-		case type_shotgun:
-
-			PossessedBot()->ChangeWeapon(type_shotgun); return;
-
-		case type_rocket_launcher:
-
-			PossessedBot()->ChangeWeapon(type_rocket_launcher); return;
-
-		case type_rail_gun:
-
-			PossessedBot()->ChangeWeapon(type_rail_gun); return;
-
-		}
-	}
->>>>>>> a28c209d5d7fa5e74064fa2b56e90b6eed9bee9b
 }
 
 //---------------------------- isLOSOkay --------------------------------------

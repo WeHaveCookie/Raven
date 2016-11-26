@@ -175,9 +175,14 @@ public:
   bool          isAlive()const{return m_Status == alive;}
   bool          isSpawning()const{return m_Status == spawning;}
   
+  int            getTeam()const { return m_iTeam; }
+
+
   void          SetSpawning(){m_Status = spawning;}
   void          SetDead(){m_Status = dead;}
   void          SetAlive(){m_Status = alive;}
+  void          SetTeam(int color) { m_iTeam = color; }
+
 
   //returns a value indicating the time in seconds it will take the bot
   //to reach the given position at its current speed.
