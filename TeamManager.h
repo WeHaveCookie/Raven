@@ -22,7 +22,7 @@ public:
 	~TeamManager();
 
 	void RegisterTeam(Raven_Bot* bot);
-	void UnregisterTeam(Raven_Bot* bot);
+	void UnregisterTeam();
 	void SetNumTeam(int nb) { m_NumberOfTeam = nb; }
 
 	int getColor(int team);

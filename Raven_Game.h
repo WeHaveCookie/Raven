@@ -42,9 +42,6 @@ private:
 	//a list of all the bots that are inhabiting the map
 	std::list<Raven_Bot*>            m_Bots;
 
-	// number of bot in game
-	int								 m_iNumberBot;
-
 	//the user may select a bot to control manually. This is a pointer to that
 	//bot
 	Raven_Bot*                       m_pSelectedBot;
@@ -56,6 +53,7 @@ private:
 	//this class manages all the path planning requests
 	PathManager<Raven_PathPlanner>*  m_pPathManager;
 
+	//Create the team manager
 	TeamManager * m_teamManager;
 
 

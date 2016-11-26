@@ -35,8 +35,16 @@ void TeamManager::RegisterTeam(Raven_Bot * bot)
 	bot->SetTeam(team);
 }
 
-void TeamManager::UnregisterTeam(Raven_Bot * bot)
+void TeamManager::UnregisterTeam()
 {
+	int team = (m_NumberOfBot - 1) % m_NumberOfTeam;
+	
+	if (m_NumberOfBot > 0)
+	{
+		m_Team->at(team).pop_back();
+	}
+
+	m_NumberOfBot--;
 }
 
 int TeamManager::getColor(int team)
