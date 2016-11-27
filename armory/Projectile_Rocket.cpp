@@ -20,11 +20,13 @@ Rocket::Rocket(Raven_Bot* shooter, Vector2D target):
                          shooter->ID(),
                          shooter->Pos(),
                          shooter->Facing(),
-                         script->GetInt("Rocket_Damage"),
+						 script->GetFloat("Rocket_Damage"),
                          script->GetDouble("Rocket_Scale"),
                          script->GetDouble("Rocket_MaxSpeed"),
                          script->GetDouble("Rocket_Mass"),
-                         script->GetDouble("Rocket_MaxForce")),
+                         script->GetDouble("Rocket_MaxForce"),
+						 script->GetInt("Rocket_Element"),
+						 script->GetDouble("Rocket_Duration")),
 
        m_dCurrentBlastRadius(0.0),
        m_dBlastRadius(script->GetDouble("Rocket_BlastRadius"))
@@ -86,7 +88,7 @@ void Rocket::TestForImpact()
                               m_iShooterID,
                               hit->ID(),
                               Msg_TakeThatMF,
-                              (void*)&m_iDamageInflicted);
+                              (void*)&m_info);
 
       //test for bots within the blast radius and inflict damage
       InflictDamageOnBotsWithinBlastRadius();
@@ -140,7 +142,7 @@ void Rocket::InflictDamageOnBotsWithinBlastRadius()
                               m_iShooterID,
                               (*curBot)->ID(),
                               Msg_TakeThatMF,
-                              (void*)&m_iDamageInflicted);
+                              (void*)&m_info);
       
     }
   }  

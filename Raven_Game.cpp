@@ -22,6 +22,10 @@
 #include "armory/Projectile_Pellet.h"
 #include "armory/Projectile_Slug.h"
 #include "armory/Projectile_Bolt.h"
+#include "armory/Projectile_MediBullet.h"
+#include "armory/Projectile_Slag.h"
+#include "armory/Projectile_Frost.h"
+#include "armory/Projectile_Electrical.h"
 
 #include "goals/Goal_Think.h"
 #include "goals/Raven_Goal_Types.h"
@@ -302,6 +306,56 @@ void Raven_Game::RemoveBot()
 	m_bRemoveABot = true;
 }
 
+//------------------------- AddElectrical -----------------------------------
+void Raven_Game::AddElectrical(Raven_Bot* shooter, Vector2D target)
+{
+	Raven_Projectile* rp = new Electrical(shooter, target);
+
+	m_Projectiles.push_back(rp);
+
+#ifdef LOG_CREATIONAL_STUFF
+	debug_con << "Adding a medi bullet" << rp->ID() << " at pos " << rp->Pos() << "";
+#endif
+}
+
+//------------------------- AddFrost -----------------------------------
+void Raven_Game::AddFrost(Raven_Bot* shooter, Vector2D target)
+{
+	Raven_Projectile* rp = new Frost(shooter, target);
+
+	m_Projectiles.push_back(rp);
+
+#ifdef LOG_CREATIONAL_STUFF
+	debug_con << "Adding a medi bullet" << rp->ID() << " at pos " << rp->Pos() << "";
+#endif
+}
+
+//------------------------- AddSlag -----------------------------------
+void Raven_Game::AddSlag(Raven_Bot* shooter, Vector2D target)
+{
+	Raven_Projectile* rp = new Slag(shooter, target);
+
+	m_Projectiles.push_back(rp);
+
+#ifdef LOG_CREATIONAL_STUFF
+	debug_con << "Adding a medi bullet" << rp->ID() << " at pos " << rp->Pos() << "";
+#endif
+}
+
+
+//------------------------- AddMediBullet -----------------------------------
+void Raven_Game::AddMediBullet(Raven_Bot* shooter, Vector2D target)
+{
+	Raven_Projectile* rp = new MediBullet(shooter, target);
+
+	m_Projectiles.push_back(rp);
+
+#ifdef LOG_CREATIONAL_STUFF
+	debug_con << "Adding a medi bullet" << rp->ID() << " at pos " << rp->Pos() << "";
+#endif
+}
+
+
 //--------------------------- AddBolt -----------------------------------------
 //-----------------------------------------------------------------------------
 void Raven_Game::AddBolt(Raven_Bot* shooter, Vector2D target)
@@ -509,29 +563,42 @@ void Raven_Game::GetPlayerInput()const
 //-----------------------------------------------------------------------------
 void Raven_Game::ChangeWeaponOfPossessedBot(unsigned int weapon)const
 {
-	//ensure one of the bots has been possessed
-	if (m_pSelectedBot)
-	{
-		switch (weapon)
-		{
-		case type_blaster:
+  //ensure one of the bots has been possessed
+  if (m_pSelectedBot)
+  {
+    switch(weapon)
+    {
+    case type_blaster:
+      
+      PossessedBot()->ChangeWeapon(type_blaster); return;
 
-			PossessedBot()->ChangeWeapon(type_blaster); return;
+    case type_shotgun:
+      
+      PossessedBot()->ChangeWeapon(type_shotgun); return;
 
-		case type_shotgun:
+    case type_rocket_launcher:
+      
+      PossessedBot()->ChangeWeapon(type_rocket_launcher); return;
 
-			PossessedBot()->ChangeWeapon(type_shotgun); return;
+    case type_rail_gun:
+      
+      PossessedBot()->ChangeWeapon(type_rail_gun); return;
 
-		case type_rocket_launcher:
+	case type_medi_rifle:
+		PossessedBot()->ChangeWeapon(type_medi_rifle); return;
 
-			PossessedBot()->ChangeWeapon(type_rocket_launcher); return;
+	case type_slag_sniper:
+		PossessedBot()->ChangeWeapon(type_slag_sniper); return;
 
-		case type_rail_gun:
+	case type_frost_smg:
+		PossessedBot()->ChangeWeapon(type_frost_smg); return;
 
-			PossessedBot()->ChangeWeapon(type_rail_gun); return;
+	case type_electrical_gun:
+		PossessedBot()->ChangeWeapon(type_electrical_gun); return;
+		
+    }
+  }
 
-		}
-	}
 }
 
 //---------------------------- isLOSOkay --------------------------------------

@@ -3,6 +3,10 @@
 #include "armory/Weapon_RailGun.h"
 #include "armory/Weapon_ShotGun.h"
 #include "armory/Weapon_Blaster.h"
+#include "armory/Weapon_MediRifle.h"
+#include "armory/Weapon_SlagSniper.h"
+#include "armory/Weapon_FrostSMG.h"
+#include "armory/Weapon_EletricalGun.h"
 #include "Raven_Bot.h"
 #include "misc/utils.h"
 #include "lua/Raven_Scriptor.h"
@@ -58,8 +62,12 @@ void Raven_WeaponSystem::Initialize()
   m_WeaponMap[type_shotgun]         = 0;
   m_WeaponMap[type_rail_gun]        = 0;
   m_WeaponMap[type_rocket_launcher] = 0;
-
-
+  m_WeaponMap[type_medi_rifle] = 0;
+  m_WeaponMap[type_slag_sniper] = 0;
+  m_WeaponMap[type_frost_smg] = 0;
+  m_WeaponMap[type_electrical_gun] = 0;
+  
+  
   //initialize fluzzy aim
   FuzzyVariable& DistToTarget = m_FuzzyModule.CreateFLV("DistToTarget");
 
@@ -195,7 +203,20 @@ void  Raven_WeaponSystem::AddWeapon(unsigned int weapon_type)
   case type_rocket_launcher:
 
     w = new RocketLauncher(m_pOwner); break;
+  
+  case type_medi_rifle:
+	  w = new MediRifle(m_pOwner); break;
 
+  case type_slag_sniper:
+	  w = new SlagSniper(m_pOwner); break;
+
+  case type_frost_smg:
+	  w = new FrostSMG(m_pOwner); break;
+
+  case type_electrical_gun:
+	  w = new ElectricalGun(m_pOwner); break;
+	  
+	  
   }//end switch
   
 

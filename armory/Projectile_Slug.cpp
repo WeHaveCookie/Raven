@@ -22,11 +22,13 @@ Slug::Slug(Raven_Bot* shooter, Vector2D target):
                          shooter->ID(),
                          shooter->Pos(),
                          shooter->Facing(),
-                         script->GetInt("Slug_Damage"),
+						 script->GetFloat("Slug_Damage"),
                          script->GetDouble("Slug_Scale"),
                          script->GetDouble("Slug_MaxSpeed"),
                          script->GetDouble("Slug_Mass"),
-                         script->GetDouble("Slug_MaxForce")),
+                         script->GetDouble("Slug_MaxForce"),
+						 script->GetInt("Slug_Element"), 
+						 script->GetDouble("Slug_Duration")),
 
         m_dTimeShotIsVisible(script->GetDouble("Slug_Persistance"))
 {
@@ -97,7 +99,7 @@ void Slug::TestForImpact()
                             m_iShooterID,
                             (*it)->ID(),
                             Msg_TakeThatMF,
-                            (void*)&m_iDamageInflicted);
+                            (void*)&m_info);
     
   }
 }

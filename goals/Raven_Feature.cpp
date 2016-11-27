@@ -48,6 +48,18 @@ double GetMaxRoundsBotCanCarryForWeapon(int WeaponType)
 
     return script->GetDouble("ShotGun_MaxRoundsCarried");
 
+  case type_medi_rifle:
+	  return script->GetDouble("MediRifle_MaxRoundsCarried");
+
+  case type_slag_sniper:
+	  return script->GetDouble("SlagSniper_MaxRoundsCarried");
+
+  case type_frost_smg:
+	  return script->GetDouble("FrostSMG_MaxRoundsCarried");
+
+  case type_electrical_gun:
+	  return script->GetDouble("ElectricalGun_MaxRoundsCarried");
+
   default:
 
     throw std::runtime_error("trying to calculate  of unknown weapon");
@@ -82,18 +94,29 @@ double Raven_Feature::TotalWeaponStrength(Raven_Bot* pBot)
   const double MaxRoundsForShotgun = GetMaxRoundsBotCanCarryForWeapon(type_shotgun);
   const double MaxRoundsForRailgun = GetMaxRoundsBotCanCarryForWeapon(type_rail_gun);
   const double MaxRoundsForRocketLauncher = GetMaxRoundsBotCanCarryForWeapon(type_rocket_launcher);
-  const double TotalRoundsCarryable = MaxRoundsForShotgun + MaxRoundsForRailgun + MaxRoundsForRocketLauncher;
+  const double MaxRoundsForMedicRifle= GetMaxRoundsBotCanCarryForWeapon(type_medi_rifle);
+  const double MaxRoundsForSlagSniper = GetMaxRoundsBotCanCarryForWeapon(type_slag_sniper);
+  const double MaxRoundsForFrostSMG = GetMaxRoundsBotCanCarryForWeapon(type_frost_smg);
+  const double MaxRoundsForElectricalGun= GetMaxRoundsBotCanCarryForWeapon(type_electrical_gun);
+  
+  
+  const double TotalRoundsCarryable = MaxRoundsForShotgun + MaxRoundsForRailgun + MaxRoundsForRocketLauncher + MaxRoundsForMedicRifle + MaxRoundsForSlagSniper + MaxRoundsForFrostSMG + MaxRoundsForElectricalGun;
 
   double NumSlugs      = (double)pBot->GetWeaponSys()->GetAmmoRemainingForWeapon(type_rail_gun);
   double NumCartridges = (double)pBot->GetWeaponSys()->GetAmmoRemainingForWeapon(type_shotgun);
   double NumRockets    = (double)pBot->GetWeaponSys()->GetAmmoRemainingForWeapon(type_rocket_launcher);
+  double NumMedicBullet = (double)pBot->GetWeaponSys()->GetAmmoRemainingForWeapon(type_medi_rifle);
+  double NumSlag = (double)pBot->GetWeaponSys()->GetAmmoRemainingForWeapon(type_slag_sniper);
+  double NumFrost = (double)pBot->GetWeaponSys()->GetAmmoRemainingForWeapon(type_frost_smg);
+  double NumElectrical = (double)pBot->GetWeaponSys()->GetAmmoRemainingForWeapon(type_electrical_gun);
 
   //the value of the tweaker (must be in the range 0-1) indicates how much
   //desirability value is returned even if a bot has not picked up any weapons.
   //(it basically adds in an amount for a bot's persistent weapon -- the blaster)
   const double Tweaker = 0.1;
 
-  return Tweaker + (1-Tweaker)*(NumSlugs + NumCartridges + NumRockets)/(MaxRoundsForShotgun + MaxRoundsForRailgun + MaxRoundsForRocketLauncher);
+  return Tweaker + (1 - Tweaker)*(NumSlugs + NumCartridges + NumRockets + NumMedicBullet + NumSlag + NumFrost + NumElectrical) /
+	  (MaxRoundsForShotgun + MaxRoundsForRailgun + MaxRoundsForRocketLauncher + MaxRoundsForMedicRifle + MaxRoundsForSlagSniper + MaxRoundsForFrostSMG + MaxRoundsForElectricalGun);
 }
 
 //------------------------------- HealthScore ---------------------------------

@@ -30,6 +30,18 @@ int ItemTypeToGoalType(int gt)
 
     return goal_get_rocket_launcher;
 
+  case type_medi_rifle:
+	  return goal_get_medi_rifle;
+
+  case type_frost_smg:
+	  return goal_get_frost_smg;
+
+  case type_electrical_gun:
+	  return goal_get_electrical_gun;
+
+  case type_slag_sniper:
+	  return goal_get_slag_sniper;
+
   default: throw std::runtime_error("Goal_GetItem cannot determine item type");
 
   }//end switch

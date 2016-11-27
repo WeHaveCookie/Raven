@@ -23,7 +23,7 @@ Pellet::Pellet(Raven_Bot* shooter, Vector2D target):
                          shooter->ID(),
                          shooter->Pos(),
                          shooter->Facing(),
-                         script->GetInt("Pellet_Damage"),
+						 script->GetFloat("Pellet_Damage"),
                          script->GetDouble("Pellet_Scale"),
                          script->GetDouble("Pellet_MaxSpeed"),
                          script->GetDouble("Pellet_Mass"),
@@ -102,7 +102,7 @@ void Pellet::TestForImpact()
                               m_iShooterID,
                               hit->ID(),
                               Msg_TakeThatMF,
-                              (void*)&m_iDamageInflicted);
+                              (void*)&m_info);
 }
 
 //-------------------------- Render -------------------------------------------

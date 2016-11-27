@@ -11,6 +11,7 @@
 #include "time/Regulator.h"
 #include "Raven_WeaponSystem.h"
 #include "Raven_SensoryMemory.h"
+#include "Armory/Raven_Projectile.h"
 
 #include "Messaging/Telegram.h"
 #include "Raven_Messages.h"
@@ -22,6 +23,9 @@
 
 #include "Debug/DebugConsole.h"
 #include "TeamManager.h"
+
+#define TIMER_SWITCH_ELEM_DISPLAYED 1000
+#define TIMER_UPDATE_ELEM 500
 
 //-------------------------- ctor ---------------------------------------------
 Raven_Bot::Raven_Bot(Raven_Game * world, Vector2D pos) :
@@ -35,8 +39,8 @@ Raven_Bot::Raven_Bot(Raven_Game * world, Vector2D pos) :
 		script->GetDouble("Bot_MaxHeadTurnRate"),
 		script->GetDouble("Bot_MaxForce")),
 
-	m_iMaxHealth(script->GetInt("Bot_MaxHealth")),
-	m_iHealth(script->GetInt("Bot_MaxHealth")),
+	m_iMaxHealth(script->GetFloat("Bot_MaxHealth")),
+	m_iHealth(script->GetFloat("Bot_MaxHealth")),
 	m_pPathPlanner(NULL),
 	m_pSteering(NULL),
 	m_pWorld(world),
@@ -49,6 +53,10 @@ Raven_Bot::Raven_Bot(Raven_Game * world, Vector2D pos) :
 	m_dFieldOfView(DegsToRads(script->GetDouble("Bot_FOV")))
 
 {
+	m_timerChangeElemDisplayed = TIMER_SWITCH_ELEM_DISPLAYED;
+	m_timerUpdateElem = TIMER_UPDATE_ELEM;
+	m_displayedElement = Element::neutral;
+
 	SetEntityType(type_bot);
 
 	SetUpVertexBuffer();
@@ -118,6 +126,46 @@ void Raven_Bot::Spawn(Vector2D pos)
 	RestoreHealthToMaximum();
 }
 
+void Raven_Bot::updateElement()
+{
+	m_timerUpdateElem -= 16;
+	if (m_timerUpdateElem < 0) // Update elem
+	{
+		if (Fired())
+		{
+			ReduceHealth(0.5);
+		}
+		if (Poisonned())
+		{
+			ReduceHealth(1);
+		}
+		if (Electrified())
+		{
+			for (auto& elem : m_elements)
+			{
+				if (elem.first != Element::electric)
+				{
+					elem.second *= 1.1;
+				}
+			}
+		}
+		m_timerUpdateElem = TIMER_UPDATE_ELEM;
+	}
+	
+	for (auto& elem : m_elements)
+	{
+		if (elem.second > 0)
+		{
+			elem.second -= 16;
+		}
+
+		if (elem.second < 0)
+		{
+			elem.second = 0;
+		}
+	}
+}
+
 //-------------------------------- Update -------------------------------------
 //
 void Raven_Bot::Update()
@@ -126,7 +174,7 @@ void Raven_Bot::Update()
 	//is under user control. This is because a goal is created whenever a user 
 	//clicks on an area of the map that necessitates a path planning request.
 	m_pBrain->Process();
-
+	updateElement();
 	//Calculate the steering force and update the bot's velocity and position
 	UpdateMovement();
 
@@ -195,6 +243,11 @@ void Raven_Bot::UpdateMovement()
 	m_vVelocity.Truncate(m_dMaxSpeed);
 
 	//update the position
+	if (Frosted())
+	{
+		m_vVelocity *= 0.7;
+	}
+
 	m_vPosition += m_vVelocity;
 
 	//if the vehicle has a non zero velocity the heading and side vectors must 
@@ -219,34 +272,36 @@ bool Raven_Bot::isReadyForTriggerUpdate()const
 //-----------------------------------------------------------------------------
 bool Raven_Bot::HandleMessage(const Telegram& msg)
 {
-	//first see if the current goal accepts the message
-	if (GetBrain()->HandleMessage(msg)) return true;
+  //first see if the current goal accepts the message
+  if (GetBrain()->HandleMessage(msg)) return true;
+ 
+  //handle any messages not handles by the goals
+  switch(msg.Msg)
+  {
+  case Msg_TakeThatMF:
+  {
+    //just return if already dead or spawning
+    if (isDead() || isSpawning()) return true;
 
-	//handle any messages not handles by the goals
-	switch (msg.Msg)
+	auto projInfo = static_cast<ProjectileInfo*>(msg.ExtraInfo);
+
+    //the extra info field of the telegram carries the amount of damage
+	ApplyElement(projInfo->element, projInfo->duration);
+	ReduceHealth(projInfo->damage);
+
+	//if this bot is now dead let the shooter know
+	if (isDead())
 	{
-	case Msg_TakeThatMF:
-
-		//just return if already dead or spawning
-		if (isDead() || isSpawning()) return true;
-
-		//the extra info field of the telegram carries the amount of damage
-		ReduceHealth(DereferenceToType<int>(msg.ExtraInfo));
-
-		//if this bot is now dead let the shooter know
-		if (isDead())
-		{
-			Dispatcher->DispatchMsg(SEND_MSG_IMMEDIATELY,
-				ID(),
-				msg.Sender,
-				Msg_YouGotMeYouSOB,
-				NO_ADDITIONAL_INFO);
-		}
-
-		return true;
-
-	case Msg_YouGotMeYouSOB:
-
+		Dispatcher->DispatchMsg(SEND_MSG_IMMEDIATELY,
+			ID(),
+			msg.Sender,
+			Msg_YouGotMeYouSOB,
+			NO_ADDITIONAL_INFO);
+	}
+    return true;
+  }
+  case Msg_YouGotMeYouSOB:
+    
 		IncrementScore();
 
 		//the bot this bot has just killed should be removed as the target
@@ -331,18 +386,53 @@ bool Raven_Bot::RotateFacingTowardPosition(Vector2D target)
 
 
 //--------------------------------- ReduceHealth ----------------------------
-void Raven_Bot::ReduceHealth(unsigned int val)
+void Raven_Bot::ReduceHealth(float val)
 {
-	m_iHealth -= val;
+	if (Slagged())
+	{
+		val *= 2.0f;
+	}
+  m_iHealth -= val;
 
-	if (m_iHealth <= 0)
+
+	if (m_iHealth <= 0.0f)
 	{
 		SetDead();
 	}
 
-	m_bHit = true;
+
+  m_bHit = true;
 
 	m_iNumUpdatesHitPersistant = (int)(FrameRate * script->GetDouble("HitFlashTime"));
+}
+
+void Raven_Bot::ApplyElement(Element::Enum element, double duration)
+{
+	switch (element)
+	{
+	case Element::fire:
+		if (Frosted())
+		{
+			m_elements[Element::frost] = 0;
+			return;
+		}
+		break;
+	case Element::frost:
+		if (Fired())
+		{
+			m_elements[Element::fire] = 0;
+			return;
+		}
+		break;
+	case Element::poison:
+	case Element::electric:
+	case Element::slag:
+	case Element::neutral:
+	default:
+		break;
+	}
+
+	m_elements[element] = duration;
 }
 
 //--------------------------- Possess -----------------------------------------
@@ -474,68 +564,120 @@ bool Raven_Bot::canStepBackward(Vector2D& PositionOfStep)const
 	return canWalkTo(PositionOfStep);
 }
 
+void Raven_Bot::ChangePenWithAffect()
+{
+	m_timerChangeElemDisplayed -= 16;
+	if (NoElemAffect())
+	{
+		m_displayedElement = Element::neutral;
+	} else if (m_timerChangeElemDisplayed <= 0)
+	{
+		int counter = 0;
+		m_displayedElement += 1;
+		for (m_displayedElement; counter < (int)m_elements.size(); m_displayedElement+=1)
+		{
+			if (m_elements[m_displayedElement] > 0 )
+			{
+				break;
+			}
+			counter++;
+		}
+
+		m_timerChangeElemDisplayed = TIMER_SWITCH_ELEM_DISPLAYED;
+	}
+	
+	
+	
+	switch (m_displayedElement)
+	{
+	case Element::fire:
+		gdi->RedBrush();
+		break;
+	case Element::frost:
+		gdi->WhiteBrush();
+		break;
+	case Element::poison:
+		gdi->GreenBrush();
+		break;
+	case Element::electric:
+		gdi->BlueBrush();
+		break;
+	case Element::slag:
+		gdi->PurpleBrush();
+		break;
+	case Element::neutral:
+		gdi->BrownBrush();
+	default:
+		break;
+	}
+}
+
 //--------------------------- Render -------------------------------------
 //
 //------------------------------------------------------------------------
 void Raven_Bot::Render()
 {
-	//when a bot is hit by a projectile this value is set to a constant user
-	//defined value which dictates how long the bot should have a thick red
-	//circle drawn around it (to indicate it's been hit) The circle is drawn
-	//as long as this value is positive. (see Render)
-	m_iNumUpdatesHitPersistant--;
+  //when a bot is hit by a projectile this value is set to a constant user
+  //defined value which dictates how long the bot should have a thick red
+  //circle drawn around it (to indicate it's been hit) The circle is drawn
+  //as long as this value is positive. (see Render)
+  m_iNumUpdatesHitPersistant--;
 
 
-	if (isDead() || isSpawning()) return;
+  if (isDead() || isSpawning()) return;
+  
+  gdi->SetPenColor(TeamManager::GetSingleton()->getColor(getTeam()));
+  //gdi->BluePen();
+  
+  
+  m_vecBotVBTrans = WorldTransform(m_vecBotVB,
+                                   Pos(),
+                                   Facing(),
+                                   Facing().Perp(),
+                                   Scale());
 
-	gdi->SetPenColor(TeamManager::GetSingleton()->getColor(m_iTeam));
-
-	m_vecBotVBTrans = WorldTransform(m_vecBotVB,
-		Pos(),
-		Facing(),
-		Facing().Perp(),
-		Scale());
-
-	gdi->ClosedShape(m_vecBotVBTrans);
-
-	//draw the head
-	gdi->BrownBrush();
-	gdi->Circle(Pos(), 6.0 * Scale().x);
+  gdi->ClosedShape(m_vecBotVBTrans);
+  
+  ChangePenWithAffect();
+  //draw the head
+  
+  gdi->Circle(Pos(), 6.0 * Scale().x);
 
 
-	//render the bot's weapon
-	m_pWeaponSys->RenderCurrentWeapon();
+  //render the bot's weapon
+  m_pWeaponSys->RenderCurrentWeapon();
 
-	//render a thick red circle if the bot gets hit by a weapon
-	if (m_bHit)
-	{
-		gdi->ThickRedPen();
-		gdi->HollowBrush();
-		gdi->Circle(m_vPosition, BRadius() + 1);
+  //render a thick red circle if the bot gets hit by a weapon
+  if (m_bHit)
+  {
+    gdi->ThickRedPen();
+    gdi->HollowBrush();
+    gdi->Circle(m_vPosition, BRadius()+1);
 
-		if (m_iNumUpdatesHitPersistant <= 0)
-		{
-			m_bHit = false;
-		}
-	}
+    if (m_iNumUpdatesHitPersistant <= 0)
+    {
+      m_bHit = false;
+    }
+  }
 
-	gdi->TransparentText();
-	gdi->TextColor(0, 255, 0);
+  gdi->TransparentText();
+  gdi->TextColor(0,255,0);
 
-	if (UserOptions->m_bShowBotIDs)
-	{
-		gdi->TextAtPos(Pos().x - 10, Pos().y - 20, ttos(ID()));
-	}
+  if (UserOptions->m_bShowBotIDs)
+  {
+    gdi->TextAtPos(Pos().x -10, Pos().y-20, ttos(ID()));
+  }
 
-	if (UserOptions->m_bShowBotHealth)
-	{
-		gdi->TextAtPos(Pos().x - 40, Pos().y - 5, "H:" + ttos(Health()));
-	}
+  if (UserOptions->m_bShowBotHealth)
+  {
+    gdi->TextAtPos(Pos().x-40, Pos().y-5, "H:"+ ttos((int)Health()));
+  }
 
-	if (UserOptions->m_bShowScore)
-	{
-		gdi->TextAtPos(Pos().x - 40, Pos().y + 10, "Scr:" + ttos(Score()));
-	}
+  if (UserOptions->m_bShowScore)
+  {
+    gdi->TextAtPos(Pos().x-40, Pos().y+10, "Scr:"+ ttos(Score()));
+  }    
+
 }
 
 //------------------------- SetUpVertexBuffer ---------------------------------
@@ -578,4 +720,17 @@ void Raven_Bot::IncreaseHealth(unsigned int val)
 {
 	m_iHealth += val;
 	Clamp(m_iHealth, 0, m_iMaxHealth);
+}
+
+int	Raven_Bot::NumberAffectedElements()
+{
+	int nbr = 0;
+	for (auto& elem : m_elements)
+	{
+		if (elem.second > 0)
+		{
+			nbr++;
+		}
+	}
+	return nbr;
 }

@@ -113,6 +113,58 @@ void Trigger_WeaponGiver::Render()
       
         break;
 
+	  case type_medi_rifle:
+	  {
+		  gdi->GreenPen();
+		  gdi->GreenBrush();
+		  const double sz = 2.0;
+		  gdi->Circle(Pos().x - sz, Pos().y, sz/2);
+		  gdi->Circle(Pos().x + sz, Pos().y, sz/2);
+		  gdi->Circle(Pos().x, Pos().y + sz, sz/2);
+		  gdi->Circle(Pos().x, Pos().y - sz, sz/2);
+		  break;
+	  }
+
+	  case type_slag_sniper:
+	  {
+		  gdi->BlackPen();
+		  gdi->PurpleBrush();
+		  gdi->Circle(Pos(), 3);
+		  gdi->ThickPurplePen();
+		  gdi->Line(Pos(), Vector2D(Pos().x, Pos().y - 9));
+		  break;
+	  }
+
+	  case type_frost_smg:
+	  {
+		  Vector2D facing(-1, 0);
+
+		  m_vecRLVBTrans = WorldTransform(m_vecRLVB,
+			  Pos(),
+			  facing,
+			  facing.Perp(),
+			  Vector2D(2.5, 2.5));
+
+		  gdi->BlackPen();
+		  gdi->WhiteBrush();
+		  gdi->ClosedShape(m_vecRLVBTrans);
+		  break;
+	  }
+
+	  case type_electrical_gun:
+	  {
+
+		  gdi->BlackBrush();
+		  gdi->BluePen();
+		  const double sz = 3.0;
+		  gdi->Circle(Pos().x, Pos().y - sz, sz);
+		  gdi->Circle(Pos().x, Pos().y + sz, sz);
+	  }
+
+	  break;
+	  
+	  
+
     }//end switch
   }
 }

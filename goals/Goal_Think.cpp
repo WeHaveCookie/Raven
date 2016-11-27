@@ -30,6 +30,10 @@ Goal_Think::Goal_Think(Raven_Bot* pBot):Goal_Composite<Raven_Bot>(pBot, goal_thi
   double HealthBias = RandInRange(LowRangeOfBias, HighRangeOfBias);
   double ShotgunBias = RandInRange(LowRangeOfBias, HighRangeOfBias);
   double RocketLauncherBias = RandInRange(LowRangeOfBias, HighRangeOfBias);
+  double MediRifleBias = RandInRange(LowRangeOfBias, HighRangeOfBias);
+  double SlagSniperBias = RandInRange(LowRangeOfBias, HighRangeOfBias);
+  double FrostSMGBias = RandInRange(LowRangeOfBias, HighRangeOfBias);
+  double ElectricalGunBias = RandInRange(LowRangeOfBias, HighRangeOfBias);
   double RailgunBias = RandInRange(LowRangeOfBias, HighRangeOfBias);
   double ExploreBias = RandInRange(LowRangeOfBias, HighRangeOfBias);
   double AttackBias = RandInRange(LowRangeOfBias, HighRangeOfBias);
@@ -44,6 +48,16 @@ Goal_Think::Goal_Think(Raven_Bot* pBot):Goal_Composite<Raven_Bot>(pBot, goal_thi
                                                      type_rail_gun));
   m_Evaluators.push_back(new GetWeaponGoal_Evaluator(RocketLauncherBias,
                                                      type_rocket_launcher));
+  m_Evaluators.push_back(new GetWeaponGoal_Evaluator(MediRifleBias,
+	  type_medi_rifle));
+  m_Evaluators.push_back(new GetWeaponGoal_Evaluator(SlagSniperBias,
+	  type_slag_sniper));
+  m_Evaluators.push_back(new GetWeaponGoal_Evaluator(FrostSMGBias,
+	  type_frost_smg));
+  m_Evaluators.push_back(new GetWeaponGoal_Evaluator(ElectricalGunBias,
+	  type_electrical_gun));
+  
+
 }
 
 //----------------------------- dtor ------------------------------------------
