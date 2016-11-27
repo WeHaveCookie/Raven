@@ -1,4 +1,4 @@
-#include "Projectile_Slag.h"
+#include "Projectile_Frost.h"
 #include "../lua/Raven_Scriptor.h"
 #include "misc/cgdi.h"
 #include "../Raven_Bot.h"
@@ -11,32 +11,32 @@
 #include "Messaging/MessageDispatcher.h"
 
 
-Slag::Slag(Raven_Bot* shooter, Vector2D target)
+Frost::Frost(Raven_Bot* shooter, Vector2D target)
 	:Raven_Projectile(target,
 	shooter->GetWorld(),
 	shooter->ID(),
 	shooter->Pos(),
 	shooter->Facing(),
-	script->GetFloat("Slag_Damage"),
-	script->GetDouble("Slag_Scale"),
-	script->GetDouble("Slag_MaxSpeed"),
-	script->GetDouble("Slag_Mass"),
-	script->GetDouble("Slag_MaxForce"),
-	script->GetInt("Slag_Element"),
-	script->GetDouble("Slag_Duration"))
+	script->GetFloat("Frost_Damage"),
+	script->GetDouble("Frost_Scale"),
+	script->GetDouble("Frost_MaxSpeed"),
+	script->GetDouble("Frost_Mass"),
+	script->GetDouble("Frost_MaxForce"),
+	script->GetInt("Frost_Element"),
+	script->GetDouble("Frost_Duration"))
 {
 	assert(target != Vector2D());
 
 }
 
-void Slag::Render()
+void Frost::Render()
 {
 	gdi->BlackPen();
-	gdi->PurpleBrush();
+	gdi->WhiteBrush();
 	gdi->Circle(Pos(), 1);
 }
 
-void Slag::Update()
+void Frost::Update()
 {
 	if (!m_bImpacted)
 	{
@@ -56,7 +56,7 @@ void Slag::Update()
 	}
 }
 
-void Slag::TestForImpact()
+void Frost::TestForImpact()
 {
 	
 	Raven_Bot* hit = GetClosestIntersectingBot(m_vPosition - m_vVelocity, m_vPosition);

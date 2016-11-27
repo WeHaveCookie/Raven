@@ -48,7 +48,7 @@ namespace Element
 
 struct ProjectileInfo
 {
-	int damage;
+	float damage;
 	Element::Enum element;
 	double duration;
 };
@@ -102,7 +102,7 @@ public:
                    int      ShooterID, //the ID of the bot that fired this shot
                    Vector2D origin,  //the start position of the projectile
                    Vector2D heading,   //the heading of the projectile
-                   int      damage,    //how much damage it inflicts
+                   float      damage,    //how much damage it inflicts
                    double    scale,    
                    double    MaxSpeed, 
                    double    mass,
@@ -138,7 +138,7 @@ public:
 				  int      ShooterID, //the ID of the bot that fired this shot
 				  Vector2D origin,  //the start position of the projectile
 				  Vector2D heading,   //the heading of the projectile
-				  int      damage,    //how much damage it inflicts
+				  float      damage,    //how much damage it inflicts
 				  double    scale,
 				  double    MaxSpeed,
 				  double    mass,

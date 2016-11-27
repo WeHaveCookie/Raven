@@ -20,7 +20,7 @@ Bolt::Bolt(Raven_Bot* shooter, Vector2D target):
                          shooter->ID(),
                          shooter->Pos(),
                          shooter->Facing(),
-                         script->GetInt("Bolt_Damage"),
+						 script->GetFloat("Bolt_Damage"),
                          script->GetDouble("Bolt_Scale"),
                          script->GetDouble("Bolt_MaxSpeed"),
                          script->GetDouble("Bolt_Mass"),

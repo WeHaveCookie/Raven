@@ -97,6 +97,8 @@ public:
   //loads an environment from a file
   bool LoadMap(const std::string& FileName);
 
+  void AddElectrical(Raven_Bot* shooter, Vector2D target);
+  void AddFrost(Raven_Bot* shooter, Vector2D target);
   void AddSlag(Raven_Bot* shooter, Vector2D target);
   void AddMediBullet(Raven_Bot* shooter, Vector2D target);
   void AddBots(unsigned int NumBotsToAdd);

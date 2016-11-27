@@ -1,8 +1,10 @@
 #include "Raven_TargetingSystem.h"
 #include "Raven_Bot.h"
 #include "Raven_SensoryMemory.h"
-
-
+#include "armory/Raven_Weapon.h"
+#include "Raven_WeaponSystem.h"
+#include "Raven_ObjectEnumerations.h"
+#include "TeamManager.h"
 
 //-------------------------------- ctor ---------------------------------------
 //-----------------------------------------------------------------------------
@@ -24,9 +26,32 @@ void Raven_TargetingSystem::Update()
   std::list<Raven_Bot*> SensedBots;
   SensedBots = m_pOwner->GetSensoryMem()->GetListOfRecentlySensedOpponents();
   
+  // If bot get a medirifle, select the lowest hp ally.
+  if (m_pOwner->GetWeaponSys()->GetCurrentWeapon()->GetType() == type_medi_rifle)
+  {
+	  auto allies = TeamManager::GetSingleton()->getAlly(m_pOwner->getTeam());
+	  if (allies.size() >= 2)
+	  {
+		  m_pCurrentTarget = allies[0];
+		  if (m_pCurrentTarget == m_pOwner)
+		  {
+			  m_pCurrentTarget = allies[1];
+		  }
+			for (auto& ally : allies)
+			{
+				if (ally->HealthPerc() < m_pCurrentTarget->HealthPerc() && m_pOwner != ally)
+				{
+					m_pCurrentTarget = ally;
+				}
+			}
+			return;
+	  }
+  }
+  
   std::list<Raven_Bot*>::const_iterator curBot = SensedBots.begin();
   for (curBot; curBot != SensedBots.end(); ++curBot)
   {
+	  
     //make sure the bot is alive and that it is not the owner
     if ((*curBot)->isAlive() && (*curBot != m_pOwner) && ((*curBot)->getTeam() != m_pOwner->getTeam()))
     {

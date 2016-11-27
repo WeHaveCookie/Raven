@@ -1,4 +1,4 @@
-#include "Projectile_Slag.h"
+#include "Projectile_Electrical.h"
 #include "../lua/Raven_Scriptor.h"
 #include "misc/cgdi.h"
 #include "../Raven_Bot.h"
@@ -11,32 +11,32 @@
 #include "Messaging/MessageDispatcher.h"
 
 
-Slag::Slag(Raven_Bot* shooter, Vector2D target)
+Electrical::Electrical(Raven_Bot* shooter, Vector2D target)
 	:Raven_Projectile(target,
 	shooter->GetWorld(),
 	shooter->ID(),
 	shooter->Pos(),
 	shooter->Facing(),
-	script->GetFloat("Slag_Damage"),
-	script->GetDouble("Slag_Scale"),
-	script->GetDouble("Slag_MaxSpeed"),
-	script->GetDouble("Slag_Mass"),
-	script->GetDouble("Slag_MaxForce"),
-	script->GetInt("Slag_Element"),
-	script->GetDouble("Slag_Duration"))
+	script->GetFloat("Electrical_Damage"),
+	script->GetDouble("Electrical_Scale"),
+	script->GetDouble("Electrical_MaxSpeed"),
+	script->GetDouble("Electrical_Mass"),
+	script->GetDouble("Electrical_MaxForce"),
+	script->GetInt("Electrical_Element"),
+	script->GetDouble("Electrical_Duration"))
 {
 	assert(target != Vector2D());
 
 }
 
-void Slag::Render()
+void Electrical::Render()
 {
-	gdi->BlackPen();
-	gdi->PurpleBrush();
+	gdi->BluePen();
+	gdi->BlueBrush();
 	gdi->Circle(Pos(), 1);
 }
 
-void Slag::Update()
+void Electrical::Update()
 {
 	if (!m_bImpacted)
 	{
@@ -56,7 +56,7 @@ void Slag::Update()
 	}
 }
 
-void Slag::TestForImpact()
+void Electrical::TestForImpact()
 {
 	
 	Raven_Bot* hit = GetClosestIntersectingBot(m_vPosition - m_vVelocity, m_vPosition);

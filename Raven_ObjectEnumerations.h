@@ -20,7 +20,9 @@ enum
   type_sliding_door, // 11
   type_door_trigger, // 12
   type_medi_rifle, // 13
-  type_slag_sniper // 14
+  type_slag_sniper, // 14
+  type_frost_smg, // 15
+  type_electrical_gun // 16
 };
 
 
@@ -57,6 +59,12 @@ inline std::string GetNameOfType(int w)
 
   case type_slag_sniper:
 	  s = "SlagSniper"; break;
+
+  case type_frost_smg:
+	  s = "FrostSMG"; break;
+
+  case type_electrical_gun:
+	  s = "ElectricalGun"; break;
 
   case type_rail_gun:
     

@@ -5,7 +5,7 @@
 #include "../Raven_Map.h"
 #include "../lua/Raven_Scriptor.h"
 #include "fuzzy/FuzzyOperators.h"
-
+#include "../TeamManager.h"
 
 MediRifle::MediRifle(Raven_Bot* owner)
 	:Raven_Weapon(type_medi_rifle,
@@ -74,8 +74,25 @@ double MediRifle::GetDesirability(double DistToTarget)
 	{
 		//fuzzify distance and amount of ammo
 		m_FuzzyModule.Fuzzify("DistToTarget", DistToTarget);
-		//m_FuzzyModule.Fuzzify("AlliesLife", TeamManager::GetSingleton()->GetLowestLifeAllie()->Health());
-		m_FuzzyModule.Fuzzify("AlliesLife", m_pOwner->HealthPerc());
+		auto allies = TeamManager::GetSingleton()->getAlly(m_pOwner->getTeam());
+
+		float life = 200.0;
+		for (auto& ally : allies)
+		{
+			if (!ally->isDead() && ally != m_pOwner && ally->HealthPerc() < life)
+			{
+				life = ally->HealthPerc();
+			}
+		}
+
+		// No ally found
+		if (life == 200.0)
+		{
+			return 0;
+		}
+
+		m_FuzzyModule.Fuzzify("AlliesLife", life);
+		//m_FuzzyModule.Fuzzify("AlliesLife", TeamManagerm_pOwner->HealthPerc());
 
 		m_dLastDesirabilityScore = m_FuzzyModule.DeFuzzify("Desirability", FuzzyModule::max_av);
 

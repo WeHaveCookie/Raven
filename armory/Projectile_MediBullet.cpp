@@ -17,7 +17,7 @@ MediBullet::MediBullet(Raven_Bot* shooter, Vector2D target)
 	shooter->ID(),
 	shooter->Pos(),
 	shooter->Facing(),
-	script->GetInt("MediBullet_Damage"),
+	script->GetFloat("MediBullet_Damage"),
 	script->GetDouble("MediBullet_Scale"),
 	script->GetDouble("MediBullet_MaxSpeed"),
 	script->GetDouble("MediBullet_Mass"),

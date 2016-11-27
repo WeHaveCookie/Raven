@@ -28,7 +28,7 @@ GraveLifetime = 5
 -------------------------[[ bot parameters ]]----------------------------------
 -------------------------------------------------------------------------------
 
-Bot_MaxHealth = 100
+Bot_MaxHealth = 100.0
 Bot_MaxSpeed  = 1
 Bot_Mass      = 1
 Bot_MaxForce  = 1.0
@@ -134,7 +134,7 @@ Bolt_MaxSpeed    = 5
 Bolt_Mass        = 1
 Bolt_MaxForce    = 100.0
 Bolt_Scale       = Bot_Scale
-Bolt_Damage      = 1
+Bolt_Damage      = 1.0
 
 
 MediRifle_DefaultRounds		= 40
@@ -143,13 +143,13 @@ MediRifle_FiringFreq		= 10
 MediRifle_IdealRange		= 200
 MediRifle_SoundRange 		= 50
 
-MediBullet_Damage		= -1
+MediBullet_Damage		= -1.0
 MediBullet_Scale		= Bot_Scale
 MediBullet_MaxSpeed		= 5
 MediBullet_Mass			= 1
 MediBullet_MaxForce		= 20.0
-MediBullet_Element = 0
-MediBullet_Duration = 0
+MediBullet_Element 		= 0
+MediBullet_Duration 	= 0
 
 SlagSniper_DefaultRounds	= 3
 SlagSniper_MaxRoundsCarried	= 6
@@ -157,13 +157,41 @@ SlagSniper_FiringFreq		= 1
 SlagSniper_IdealRange		= 2000
 SlagSniper_SoundRange 		= 500
 
-Slag_Damage		= 0
+Slag_Damage		= 0.0
 Slag_Scale		= Bot_Scale
-Slag_MaxSpeed		= 15
-Slag_Mass			= 1
-Slag_MaxForce		= 50.0
-Slag_Element = 5
-Slag_Duration = 5000
+Slag_MaxSpeed	= 15
+Slag_Mass		= 1
+Slag_MaxForce	= 50.0
+Slag_Element 	= 5
+Slag_Duration 	= 5000
+
+FrostSMG_DefaultRounds		= 100
+FrostSMG_MaxRoundsCarried	= 300
+FrostSMG_FiringFreq			= 20
+FrostSMG_IdealRange			= 500
+FrostSMG_SoundRange 		= 100
+
+Frost_Damage	= 0.3
+Frost_Scale		= Bot_Scale
+Frost_MaxSpeed	= 5
+Frost_Mass		= 1
+Frost_MaxForce	= 10.0
+Frost_Element 	= 2
+Frost_Duration 	= 1000
+
+ElectricalGun_DefaultRounds		= 6
+ElectricalGun_MaxRoundsCarried	= 18
+ElectricalGun_FiringFreq		= 1
+ElectricalGun_IdealRange		= 300
+ElectricalGun_SoundRange 		= 250
+
+Electrical_Damage	= 5
+Electrical_Scale	= Bot_Scale
+Electrical_MaxSpeed	= 4
+Electrical_Mass		= 1
+Electrical_MaxForce	= 10.0
+Electrical_Element 	= 4
+Electrical_Duration = 5000
 
 RocketLauncher_FiringFreq       = 1.5
 RocketLauncher_DefaultRounds      = 15
@@ -176,7 +204,7 @@ Rocket_MaxSpeed    = 3
 Rocket_Mass        = 1
 Rocket_MaxForce    = 10.0
 Rocket_Scale       = Bot_Scale
-Rocket_Damage      = 10
+Rocket_Damage      = 10.0
 Rocket_ExplosionDecayRate = 2.0   --how fast the explosion occurs (in secs)
 Rocket_Element		= 1
 Rocket_Duration		= 7000
@@ -193,7 +221,7 @@ Slug_Mass        = 0.1
 Slug_MaxForce    = 10000.0
 Slug_Scale       = Bot_Scale
 Slug_Persistance = 0.2
-Slug_Damage      = 7
+Slug_Damage      = 7.0
 Slug_Element	=  3
 Slug_Duration	= 5000
 

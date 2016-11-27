@@ -20,7 +20,7 @@ Rocket::Rocket(Raven_Bot* shooter, Vector2D target):
                          shooter->ID(),
                          shooter->Pos(),
                          shooter->Facing(),
-                         script->GetInt("Rocket_Damage"),
+						 script->GetFloat("Rocket_Damage"),
                          script->GetDouble("Rocket_Scale"),
                          script->GetDouble("Rocket_MaxSpeed"),
                          script->GetDouble("Rocket_Mass"),

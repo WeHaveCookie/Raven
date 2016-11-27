@@ -75,10 +75,10 @@ private:
 
 	//the bot's health. Every time the bot is shot this value is decreased. If
 	//it reaches zero then the bot dies (and respawns)
-	int                                m_iHealth;
+	float                                m_iHealth;
 
 	//the bot's maximum health value. It starts its life with health at this value
-	int                                m_iMaxHealth;
+	float                                m_iMaxHealth;
 
 	//each time this bot kills another this value is incremented
 	int                                m_iScore;
@@ -150,10 +150,10 @@ public:
   bool          RotateFacingTowardPosition(Vector2D target);
  
   //methods for accessing attribute data
-  int           Health()const{return m_iHealth;}
-  int           MaxHealth()const{return m_iMaxHealth;}
-  int			HealthPerc() const { return min((int)(Health() / (float)MaxHealth()) * 100, 100); }
-  void          ReduceHealth(int val);
+  float        Health()const{ return m_iHealth; }
+  float        MaxHealth()const{ return m_iMaxHealth; }
+  float			HealthPerc() const { return min((Health() / MaxHealth()) * 100.0f, 100.0f); }
+  void          ReduceHealth(float val);
   void			ApplyElement(Element::Enum element, double duration);
   void          IncreaseHealth(unsigned int val);
   void          RestoreHealthToMaximum();
@@ -166,6 +166,7 @@ public:
   bool			NoElemAffect() { return !Slagged() && !Fired() && !Frosted() && !Poisonned() && !Electrified(); }
   int           Score()const{return m_iScore;}
   void          IncrementScore(){++m_iScore;}
+  int			NumberAffectedElements();
 
   Vector2D      Facing()const{return m_vFacing;}
   double        FieldOfView()const{return m_dFieldOfView;}
@@ -179,7 +180,7 @@ public:
 
 
   void          SetSpawning(){m_Status = spawning;}
-  void          SetDead(){m_Status = dead;}
+  void          SetDead(){ m_Status = dead; m_elements.clear(); m_iHealth = 0.0f; }
   void          SetAlive(){m_Status = alive;}
   void          SetTeam(int color) { m_iTeam = color; }
 

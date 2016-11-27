@@ -22,7 +22,7 @@ Slug::Slug(Raven_Bot* shooter, Vector2D target):
                          shooter->ID(),
                          shooter->Pos(),
                          shooter->Facing(),
-                         script->GetInt("Slug_Damage"),
+						 script->GetFloat("Slug_Damage"),
                          script->GetDouble("Slug_Scale"),
                          script->GetDouble("Slug_MaxSpeed"),
                          script->GetDouble("Slug_Mass"),

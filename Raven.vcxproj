@@ -217,8 +217,12 @@
     </Bscmake>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="armory\Projectile_Electrical.cpp" />
+    <ClCompile Include="armory\Projectile_Frost.cpp" />
     <ClCompile Include="armory\Projectile_MediBullet.cpp" />
     <ClCompile Include="armory\Projectile_Slag.cpp" />
+    <ClCompile Include="armory\Weapon_EletricalGun.cpp" />
+    <ClCompile Include="armory\Weapon_FrostSMG.cpp" />
     <ClCompile Include="armory\Weapon_MediRifle.cpp" />
     <ClCompile Include="armory\Weapon_SlagSniper.cpp" />
     <ClCompile Include="main.cpp">
@@ -539,8 +543,12 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="armory\Projectile_Electrical.h" />
+    <ClInclude Include="armory\Projectile_Frost.h" />
     <ClInclude Include="armory\Projectile_MediBullet.h" />
     <ClInclude Include="armory\Projectile_Slag.h" />
+    <ClInclude Include="armory\Weapon_EletricalGun.h" />
+    <ClInclude Include="armory\Weapon_FrostSMG.h" />
     <ClInclude Include="armory\Weapon_MediRifle.h" />
     <ClInclude Include="armory\Weapon_SlagSniper.h" />
     <ClInclude Include="Raven_Bot.h" />

@@ -24,6 +24,8 @@
 #include "armory/Projectile_Bolt.h"
 #include "armory/Projectile_MediBullet.h"
 #include "armory/Projectile_Slag.h"
+#include "armory/Projectile_Frost.h"
+#include "armory/Projectile_Electrical.h"
 
 #include "goals/Goal_Think.h"
 #include "goals/Raven_Goal_Types.h"
@@ -306,6 +308,29 @@ void Raven_Game::RemoveBot()
 	m_bRemoveABot = true;
 }
 
+//------------------------- AddElectrical -----------------------------------
+void Raven_Game::AddElectrical(Raven_Bot* shooter, Vector2D target)
+{
+	Raven_Projectile* rp = new Electrical(shooter, target);
+
+	m_Projectiles.push_back(rp);
+
+#ifdef LOG_CREATIONAL_STUFF
+	debug_con << "Adding a medi bullet" << rp->ID() << " at pos " << rp->Pos() << "";
+#endif
+}
+
+//------------------------- AddFrost -----------------------------------
+void Raven_Game::AddFrost(Raven_Bot* shooter, Vector2D target)
+{
+	Raven_Projectile* rp = new Frost(shooter, target);
+
+	m_Projectiles.push_back(rp);
+
+#ifdef LOG_CREATIONAL_STUFF
+	debug_con << "Adding a medi bullet" << rp->ID() << " at pos " << rp->Pos() << "";
+#endif
+}
 
 //------------------------- AddSlag -----------------------------------
 void Raven_Game::AddSlag(Raven_Bot* shooter, Vector2D target)
@@ -567,6 +592,12 @@ void Raven_Game::ChangeWeaponOfPossessedBot(unsigned int weapon)const
 	case type_slag_sniper:
 		PossessedBot()->ChangeWeapon(type_slag_sniper); return;
 
+	case type_frost_smg:
+		PossessedBot()->ChangeWeapon(type_frost_smg); return;
+
+	case type_electrical_gun:
+		PossessedBot()->ChangeWeapon(type_electrical_gun); return;
+		
     }
   }
 

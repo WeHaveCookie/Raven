@@ -25,7 +25,7 @@
 #include "TeamManager.h"
 
 #define TIMER_SWITCH_ELEM_DISPLAYED 1000
-#define TIMER_UPDATE_ELEM 1000
+#define TIMER_UPDATE_ELEM 500
 
 //-------------------------- ctor ---------------------------------------------
 Raven_Bot::Raven_Bot(Raven_Game * world, Vector2D pos) :
@@ -39,8 +39,8 @@ Raven_Bot::Raven_Bot(Raven_Game * world, Vector2D pos) :
 		script->GetDouble("Bot_MaxHeadTurnRate"),
 		script->GetDouble("Bot_MaxForce")),
 
-	m_iMaxHealth(script->GetInt("Bot_MaxHealth")),
-	m_iHealth(script->GetInt("Bot_MaxHealth")),
+	m_iMaxHealth(script->GetFloat("Bot_MaxHealth")),
+	m_iHealth(script->GetFloat("Bot_MaxHealth")),
 	m_pPathPlanner(NULL),
 	m_pSteering(NULL),
 	m_pWorld(world),
@@ -133,11 +133,21 @@ void Raven_Bot::updateElement()
 	{
 		if (Fired())
 		{
-			ReduceHealth(1);
+			ReduceHealth(0.5);
 		}
 		if (Poisonned())
 		{
-			ReduceHealth(2);
+			ReduceHealth(1);
+		}
+		if (Electrified())
+		{
+			for (auto& elem : m_elements)
+			{
+				if (elem.first != Element::electric)
+				{
+					elem.second *= 1.1;
+				}
+			}
 		}
 		m_timerUpdateElem = TIMER_UPDATE_ELEM;
 	}
@@ -233,6 +243,11 @@ void Raven_Bot::UpdateMovement()
 	m_vVelocity.Truncate(m_dMaxSpeed);
 
 	//update the position
+	if (Frosted())
+	{
+		m_vVelocity *= 0.7;
+	}
+
 	m_vPosition += m_vVelocity;
 
 	//if the vehicle has a non zero velocity the heading and side vectors must 
@@ -271,20 +286,18 @@ bool Raven_Bot::HandleMessage(const Telegram& msg)
 	auto projInfo = static_cast<ProjectileInfo*>(msg.ExtraInfo);
 
     //the extra info field of the telegram carries the amount of damage
+	ApplyElement(projInfo->element, projInfo->duration);
 	ReduceHealth(projInfo->damage);
 
-	ApplyElement(projInfo->element, projInfo->duration);
-
-		//if this bot is now dead let the shooter know
-		if (isDead())
-		{
-			Dispatcher->DispatchMsg(SEND_MSG_IMMEDIATELY,
-				ID(),
-				msg.Sender,
-				Msg_YouGotMeYouSOB,
-				NO_ADDITIONAL_INFO);
-		}
-
+	//if this bot is now dead let the shooter know
+	if (isDead())
+	{
+		Dispatcher->DispatchMsg(SEND_MSG_IMMEDIATELY,
+			ID(),
+			msg.Sender,
+			Msg_YouGotMeYouSOB,
+			NO_ADDITIONAL_INFO);
+	}
     return true;
   }
   case Msg_YouGotMeYouSOB:
@@ -373,16 +386,16 @@ bool Raven_Bot::RotateFacingTowardPosition(Vector2D target)
 
 
 //--------------------------------- ReduceHealth ----------------------------
-void Raven_Bot::ReduceHealth(int val)
+void Raven_Bot::ReduceHealth(float val)
 {
 	if (Slagged())
 	{
-		val *= 2;
+		val *= 2.0f;
 	}
   m_iHealth -= val;
 
 
-	if (m_iHealth <= 0)
+	if (m_iHealth <= 0.0f)
 	{
 		SetDead();
 	}
@@ -395,6 +408,30 @@ void Raven_Bot::ReduceHealth(int val)
 
 void Raven_Bot::ApplyElement(Element::Enum element, double duration)
 {
+	switch (element)
+	{
+	case Element::fire:
+		if (Frosted())
+		{
+			m_elements[Element::frost] = 0;
+			return;
+		}
+		break;
+	case Element::frost:
+		if (Fired())
+		{
+			m_elements[Element::fire] = 0;
+			return;
+		}
+		break;
+	case Element::poison:
+	case Element::electric:
+	case Element::slag:
+	case Element::neutral:
+	default:
+		break;
+	}
+
 	m_elements[element] = duration;
 }
 
@@ -589,7 +626,9 @@ void Raven_Bot::Render()
 
   if (isDead() || isSpawning()) return;
   
-  gdi->BluePen();
+  gdi->SetPenColor(TeamManager::GetSingleton()->getColor(getTeam()));
+  //gdi->BluePen();
+  
   
   m_vecBotVBTrans = WorldTransform(m_vecBotVB,
                                    Pos(),
@@ -631,7 +670,7 @@ void Raven_Bot::Render()
 
   if (UserOptions->m_bShowBotHealth)
   {
-    gdi->TextAtPos(Pos().x-40, Pos().y-5, "H:"+ ttos(Health()));
+    gdi->TextAtPos(Pos().x-40, Pos().y-5, "H:"+ ttos((int)Health()));
   }
 
   if (UserOptions->m_bShowScore)
@@ -681,4 +720,17 @@ void Raven_Bot::IncreaseHealth(unsigned int val)
 {
 	m_iHealth += val;
 	Clamp(m_iHealth, 0, m_iMaxHealth);
+}
+
+int	Raven_Bot::NumberAffectedElements()
+{
+	int nbr = 0;
+	for (auto& elem : m_elements)
+	{
+		if (elem.second > 0)
+		{
+			nbr++;
+		}
+	}
+	return nbr;
 }
