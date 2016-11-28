@@ -73,6 +73,8 @@
     <ClCompile Include="armory\Weapon_FrostSMG.cpp" />
     <ClCompile Include="armory\Weapon_EletricalGun.cpp" />
     <ClCompile Include="armory\Projectile_Electrical.cpp" />
+    <ClCompile Include="goals\Goal_FollowLeader.cpp" />
+    <ClCompile Include="goals\FollowLeader_Evaluator.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="armory\Projectile_MediBullet.h" />
@@ -196,6 +198,8 @@
     <ClInclude Include="armory\Weapon_FrostSMG.h" />
     <ClInclude Include="armory\Weapon_EletricalGun.h" />
     <ClInclude Include="armory\Projectile_Electrical.h" />
+    <ClInclude Include="goals\Goal_FollowLeader.h" />
+    <ClInclude Include="goals\FollowLeader_Evaluator.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Script1.rc" />

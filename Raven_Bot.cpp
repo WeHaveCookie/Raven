@@ -50,7 +50,8 @@ Raven_Bot::Raven_Bot(Raven_Game * world, Vector2D pos) :
 	m_iScore(0),
 	m_Status(spawning),
 	m_bPossessed(false),
-	m_dFieldOfView(DegsToRads(script->GetDouble("Bot_FOV")))
+	m_dFieldOfView(DegsToRads(script->GetDouble("Bot_FOV"))),
+	m_leader(false)
 
 {
 	m_timerChangeElemDisplayed = TIMER_SWITCH_ELEM_DISPLAYED;
@@ -733,4 +734,9 @@ int	Raven_Bot::NumberAffectedElements()
 		}
 	}
 	return nbr;
+}
+
+Raven_Bot*	Raven_Bot::GetLeader() const
+{
+	return TeamManager::GetSingleton()->GetLeaderOfTeam(getTeam());
 }

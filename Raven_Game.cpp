@@ -172,7 +172,10 @@ void Raven_Game::Update()
 			//create a grave
 			m_pGraveMarkers->AddGrave((*curBot)->Pos());
 
-			//change its status to spawning
+			// Change leader
+			TeamManager::GetSingleton()->ChangeLeaderOfTeam((*curBot)->getTeam());
+
+				//change its status to spawning
 			(*curBot)->SetSpawning();
 		}
 

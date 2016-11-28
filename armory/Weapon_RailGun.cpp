@@ -75,6 +75,12 @@ double RailGun::GetDesirability(double DistToTarget)
     m_FuzzyModule.Fuzzify("AmmoStatus", (double)m_iNumRoundsLeft);
 
     m_dLastDesirabilityScore = m_FuzzyModule.DeFuzzify("Desirability", FuzzyModule::max_av);
+
+	auto ennemy = m_pOwner->GetTargetBot();
+	if (ennemy->Slagged() || ennemy->Frosted())
+	{
+		m_dLastDesirabilityScore *= 1.2;
+	}
   }
 
   return m_dLastDesirabilityScore;

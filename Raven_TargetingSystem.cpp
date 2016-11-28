@@ -44,6 +44,8 @@ void Raven_TargetingSystem::Update()
 					m_pCurrentTarget = ally;
 				}
 			}
+			auto test1 = m_pOwner->getTeam();
+			auto test2 = m_pCurrentTarget->getTeam();
 			return;
 	  }
   }

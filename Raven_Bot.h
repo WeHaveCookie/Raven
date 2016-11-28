@@ -110,6 +110,8 @@ private:
 	//set to true when a human player takes over control of the bot
 	bool                               m_bPossessed;
 
+	bool								m_leader;
+
 	//a vertex buffer containing the bot's geometry
 	std::vector<Vector2D>              m_vecBotVB;
 	//the buffer for the transformed vertices
@@ -175,14 +177,16 @@ public:
   bool          isDead()const{return m_Status == dead;}
   bool          isAlive()const{return m_Status == alive;}
   bool          isSpawning()const{return m_Status == spawning;}
+  bool			isLeader() const { return m_leader; }
   
   int            getTeam()const { return m_iTeam; }
 
 
   void          SetSpawning(){m_Status = spawning;}
-  void          SetDead(){ m_Status = dead; m_elements.clear(); m_iHealth = 0.0f; }
+  void          SetDead(){ m_Status = dead; m_leader = false;  m_elements.clear(); m_iHealth = 0.0f; }
   void          SetAlive(){m_Status = alive;}
   void          SetTeam(int color) { m_iTeam = color; }
+  void			SetLeader(bool b) { m_leader = b; }
 
 
   //returns a value indicating the time in seconds it will take the bot
@@ -233,6 +237,8 @@ public:
   Raven_Bot* const                   GetTargetBot()const{return m_pTargSys->GetTarget();}
   Raven_WeaponSystem* const          GetWeaponSys()const{return m_pWeaponSys;}
   Raven_SensoryMemory* const         GetSensoryMem()const{return m_pSensoryMem;}
+
+  Raven_Bot*	GetLeader() const;
 
 
 };

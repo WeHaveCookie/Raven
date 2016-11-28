@@ -52,6 +52,19 @@ void MediRifle::ShootAt(Vector2D pos)
 {
 	if (isReadyForNextShot())
 	{
+		auto allies = TeamManager::GetSingleton()->getAlly(m_pOwner->getTeam());
+		bool isAlly = false;
+		for (auto& ally : allies)
+		{
+			if (m_pOwner->GetTargetBot() == ally)
+			{
+				isAlly = true;
+			}
+		}
+		if (!isAlly)
+		{ // Cancel fire
+			return;
+		}
 		//fire!
 		m_pOwner->GetWorld()->AddMediBullet(m_pOwner, pos);
 		m_iNumRoundsLeft--;
@@ -75,26 +88,31 @@ double MediRifle::GetDesirability(double DistToTarget)
 		//fuzzify distance and amount of ammo
 		m_FuzzyModule.Fuzzify("DistToTarget", DistToTarget);
 		auto allies = TeamManager::GetSingleton()->getAlly(m_pOwner->getTeam());
-
-		float life = 200.0;
+		Raven_Bot* selectedAlly;
+		float life = 100.0;
 		for (auto& ally : allies)
 		{
 			if (!ally->isDead() && ally != m_pOwner && ally->HealthPerc() < life)
 			{
+				selectedAlly = ally;
 				life = ally->HealthPerc();
 			}
 		}
 
 		// No ally found
-		if (life == 200.0)
+		if (life == 100.0)
 		{
 			return 0;
 		}
 
 		m_FuzzyModule.Fuzzify("AlliesLife", life);
-		//m_FuzzyModule.Fuzzify("AlliesLife", TeamManagerm_pOwner->HealthPerc());
 
 		m_dLastDesirabilityScore = m_FuzzyModule.DeFuzzify("Desirability", FuzzyModule::max_av);
+
+		if (selectedAlly->Slagged())
+		{
+			m_dLastDesirabilityScore *= 1.5;
+		}
 
 	}
 	
@@ -121,19 +139,14 @@ void MediRifle::InitializeFuzzyModule()
 
 	m_FuzzyModule.AddRule(FzAND(Target_Close, LowLife), VeryDesirable);
 	m_FuzzyModule.AddRule(FzAND(Target_Close, MediumLife), VeryDesirable);
-	m_FuzzyModule.AddRule(FzAND(Target_Close, HightLife), Desirable);
-	//m_FuzzyModule.AddRule(FzAND(Target_Close, HightLife), VeryDesirable);
+	m_FuzzyModule.AddRule(FzAND(Target_Close, HightLife), Undesirable);
 
 	m_FuzzyModule.AddRule(FzAND(Target_Medium, LowLife), VeryDesirable);
 	m_FuzzyModule.AddRule(FzAND(Target_Medium, MediumLife), Desirable);
-	m_FuzzyModule.AddRule(FzAND(Target_Medium, HightLife), Desirable);
-	//m_FuzzyModule.AddRule(FzAND(Target_Medium, MediumLife), VeryDesirable);
-	//m_FuzzyModule.AddRule(FzAND(Target_Medium, HightLife), VeryDesirable);
+	m_FuzzyModule.AddRule(FzAND(Target_Medium, HightLife), Undesirable);
 
 	m_FuzzyModule.AddRule(FzAND(Target_Far, LowLife), VeryDesirable);
 	m_FuzzyModule.AddRule(FzAND(Target_Far, MediumLife), Desirable);
 	m_FuzzyModule.AddRule(FzAND(Target_Far, HightLife), Undesirable);
-	//m_FuzzyModule.AddRule(FzAND(Target_Far, MediumLife), VeryDesirable);
-	//m_FuzzyModule.AddRule(FzAND(Target_Far, HightLife), VeryDesirable);
 
 }

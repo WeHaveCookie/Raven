@@ -31,5 +31,9 @@ public:
 	int getSizeTeam(int team) { return m_Team->at(team).size(); }
 
 	Raven_Bot* getLowestEnnemiesHealth(int team);
+
+	Raven_Bot* GetLeaderOfTeam(int team) const;
+
+	void ChangeLeaderOfTeam(int team);
 };
 

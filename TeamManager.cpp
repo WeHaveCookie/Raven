@@ -23,6 +23,7 @@ void TeamManager::RegisterTeam(Raven_Bot * bot)
 	if (m_Team->count(team) == 0)
 	{
 		std::vector<Raven_Bot*> newTeam;
+		bot->SetLeader(true);
 		newTeam.push_back(bot);
 		m_Team->insert(std::make_pair(team, newTeam));
 	}
@@ -41,6 +42,7 @@ void TeamManager::UnregisterTeam(Raven_Bot * bot)
 
 int TeamManager::getColor(int team)
 {
+	auto test = (offsetColor + team) % gdi->NumPenColors();
 	return (offsetColor + team) % gdi->NumPenColors();
 }
 
@@ -63,4 +65,28 @@ Raven_Bot * TeamManager::getLowestEnnemiesHealth(int team)
 		}
 	}
 	return tmp;
+}
+
+Raven_Bot* TeamManager::GetLeaderOfTeam(int team) const
+{
+	for (auto& bot : m_Team->at(team))
+	{
+		if (bot->isLeader())
+		{
+			return bot;
+		}
+	}
+	return NULL;
+}
+
+void TeamManager::ChangeLeaderOfTeam(int team)
+{
+	for (auto& bot : m_Team->at(team))
+	{
+		if (!bot->isDead())
+		{
+			bot->SetLeader(true);
+			break;
+		}
+	}
 }

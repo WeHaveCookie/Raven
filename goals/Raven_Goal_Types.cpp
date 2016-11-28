@@ -61,6 +61,12 @@ std::string GoalTypeToString::Convert(int gt)
   case goal_get_slag_sniper:
 	  return "get_slag_sniper";
 
+  case goal_get_frost_smg:
+	  return "get_frost_smg";
+
+  case goal_get_electrical_gun:
+	  return "get_electrical_gun";
+
   case goal_wander:
 
     return "wander";
@@ -88,6 +94,9 @@ std::string GoalTypeToString::Convert(int gt)
   case goal_say_phrase:
 
     return "say_phrase";
+
+  case goal_follow_leader:
+	  return "follow_leader";
 
   default:
 

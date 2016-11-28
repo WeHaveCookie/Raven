@@ -4,11 +4,11 @@
 
 --the number of bots the game instantiates
 
-NumBots = 3
+NumBots = 2
 
 --the number of team in the game
 
-NumTeam = 3
+NumTeam = 2
 
 --this is the maximum number of search cycles allocated to *all* current path
 -- planning searches per update

@@ -79,6 +79,9 @@ double ElectricalGun::GetDesirability(double DistToTarget)
 
 		m_dLastDesirabilityScore = m_FuzzyModule.DeFuzzify("Desirability", FuzzyModule::max_av);
 
+		auto ennemy = m_pOwner->GetTargetBot();
+
+
 	}
 	
 	return m_dLastDesirabilityScore;
