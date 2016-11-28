@@ -44,8 +44,7 @@ m_bPaused(false),
 m_bRemoveABot(false),
 m_pMap(NULL),
 m_pPathManager(NULL),
-m_pGraveMarkers(NULL),
-m_iNumberBot(0)
+m_pGraveMarkers(NULL)
 {
 	//create the team manager
 	m_teamManager = new TeamManager();
@@ -306,8 +305,7 @@ void Raven_Game::NotifyAllBotsOfRemoval(Raven_Bot* pRemovedBot)const
 //-----------------------------------------------------------------------------
 void Raven_Game::RemoveBot()
 {
-
-	m_iNumberBot--;
+	TeamManager::GetSingleton()->UnregisterTeam();
 	m_bRemoveABot = true;
 }
 
