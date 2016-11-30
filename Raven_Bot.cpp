@@ -565,6 +565,21 @@ bool Raven_Bot::canStepBackward(Vector2D& PositionOfStep)const
 	return canWalkTo(PositionOfStep);
 }
 
+bool Raven_Bot::allWithinFOV(){
+	std::list<Raven_Bot*> shootersList;
+	shootersList = GetSensoryMem()->GetListOfRecentlySensedOpponents();
+	bool allVisible = true;
+	for (auto& ShooterBot : shootersList){
+		allVisible &= GetSensoryMem()->isOpponentWithinFOV(ShooterBot);
+	}
+	return allVisible;
+}
+
+bool Raven_Bot::smartDodge(){
+	Vector2D dummy;
+	return (canStepLeft(dummy) || canStepRight(dummy)) && allWithinFOV();
+}
+
 void Raven_Bot::ChangePenWithAffect()
 {
 	m_timerChangeElemDisplayed -= 16;

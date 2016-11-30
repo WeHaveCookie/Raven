@@ -8,6 +8,8 @@
 
 #include "Goal_Wander.h"
 #include "Goal_FollowPath.h"
+#include "Goal_DodgeSideToSide.h"
+#include "../Raven_SensoryMemory.h"
 
 
 int ItemTypeToGoalType(int gt)
@@ -93,22 +95,29 @@ bool Goal_GetItem::HandleMessage(const Telegram& msg)
   //if the msg was not handled, test to see if this goal can handle it
   if (bHandled == false)
   {
+	
     switch(msg.Msg)
     {
     case Msg_PathReady:
-
+	{
       //clear any existing goals
       RemoveAllSubgoals();
 
       AddSubgoal(new Goal_FollowPath(m_pOwner,
                                      m_pOwner->GetPathPlanner()->GetPath()));
+	  //Dodge only if the bot hear guns's firesounds
+	  std::list<Raven_Bot*> shootersList;
+	  shootersList = m_pOwner->GetSensoryMem()->GetListOfRecentlySensedOpponents();
+	  if (shootersList.size() != 0){
+		  AddSubgoal(new Goal_DodgeSideToSide(m_pOwner));
+	  }
 
       //get the pointer to the item
       m_pGiverTrigger = static_cast<Raven_Map::TriggerType*>(msg.ExtraInfo);
 
       return true; //msg handled
 
-
+	}
     case Msg_NoPathAvailable:
 
       m_iStatus = failed;

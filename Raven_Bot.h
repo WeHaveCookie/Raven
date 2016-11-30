@@ -227,6 +227,10 @@ public:
   bool          canStepForward(Vector2D& PositionOfStep)const;
   bool          canStepBackward(Vector2D& PositionOfStep)const;
 
+  //Samrter Dodges When Shooting
+  bool	allWithinFOV();
+  bool	smartDodge();
+
   
   Raven_Game* const                  GetWorld(){return m_pWorld;} 
   Raven_Steering* const              GetSteering(){return m_pSteering;}
