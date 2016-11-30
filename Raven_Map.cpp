@@ -26,8 +26,7 @@ Raven_Map::Raven_Map():m_pNavGraph(NULL),
                        m_pSpacePartition(NULL),
                        m_iSizeY(0),
                        m_iSizeX(0),
-                       m_dCellSpaceNeighborhoodRange(0),
-					   m_indexNode(500)
+                       m_dCellSpaceNeighborhoodRange(0)
 {
 }
 //------------------------------ dtor -----------------------------------------

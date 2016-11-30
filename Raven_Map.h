@@ -70,8 +70,6 @@ private:
   int m_iSizeX;
   int m_iSizeY;
 
-  int m_indexNode;
-
   void  PartitionNavGraph();
 
   //this will hold a pre-calculated lookup table of the cost to travel from
