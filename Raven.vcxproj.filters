@@ -75,6 +75,7 @@
     <ClCompile Include="armory\Projectile_Electrical.cpp" />
     <ClCompile Include="goals\Goal_FollowLeader.cpp" />
     <ClCompile Include="goals\FollowLeader_Evaluator.cpp" />
+    <ClCompile Include="goals\Goal_DodgeGetItem.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="armory\Projectile_MediBullet.h" />
@@ -200,6 +201,7 @@
     <ClInclude Include="armory\Projectile_Electrical.h" />
     <ClInclude Include="goals\Goal_FollowLeader.h" />
     <ClInclude Include="goals\FollowLeader_Evaluator.h" />
+    <ClInclude Include="goals\Goal_DodgeGetItem.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Script1.rc" />
