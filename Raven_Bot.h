@@ -183,7 +183,7 @@ public:
 
 
   void          SetSpawning(){m_Status = spawning;}
-  void          SetDead() { m_Status = dead; m_leader = false; m_elements.clear(); m_iHealth = 0.0f; }
+  void          SetDead() { m_Status = dead; m_elements.clear(); m_iHealth = 0.0f; }
   void          SetAlive(){m_Status = alive;}
   void          SetTeam(int team) { m_iTeam = team; }
   void			SetLeader(bool b) { m_leader = b; }

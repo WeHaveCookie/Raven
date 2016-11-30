@@ -67,7 +67,7 @@ void FrostSMG::ShootAt(Vector2D pos)
 
 double FrostSMG::GetDesirability(double DistToTarget)
 {
-	if (m_iNumRoundsLeft == 0 || m_pOwner->GetTargetBot()->Slagged())
+	if (m_iNumRoundsLeft == 0)
 	{
 		m_dLastDesirabilityScore = 0;
 	}
@@ -78,6 +78,12 @@ double FrostSMG::GetDesirability(double DistToTarget)
 		m_FuzzyModule.Fuzzify("EnemyLife", m_pOwner->GetTargetBot()->HealthPerc());
 
 		m_dLastDesirabilityScore = m_FuzzyModule.DeFuzzify("Desirability", FuzzyModule::max_av);
+
+		auto ennemy = m_pOwner->GetTargetBot();
+		if (ennemy->Slagged())
+		{
+			m_dLastDesirabilityScore *= 1.2;
+		}
 
 	}
 	
