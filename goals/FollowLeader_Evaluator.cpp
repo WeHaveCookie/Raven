@@ -19,7 +19,7 @@ double FollowLeader_Evaluator::CalculateDesirability(Raven_Bot* pBot)
   double Desirability = 0.05;
 
   auto teamSize = TeamManager::GetSingleton()->getSizeTeam(pBot->getTeam());
-  if (teamSize <= 1 || pBot->isLeader())
+  if (teamSize <= 1 || pBot->isLeader() || pBot->GetLeader()->isDead())
   {
 	  return 0;
   }
