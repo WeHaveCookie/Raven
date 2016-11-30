@@ -37,7 +37,7 @@ void Goal_DodgeFollowPath::Activate()
   {
   case NavGraphEdge::normal:
     {
-      AddSubgoal(new Goal_TraverseEdge(m_pOwner, edge, m_Path.empty(),true));
+      AddSubgoal(new Goal_TraverseEdge(m_pOwner, edge, m_Path.empty(), false));
     }
 
     break;
