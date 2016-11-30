@@ -174,7 +174,34 @@ void Raven_Game::Update()
 			// Change leader
 			TeamManager::GetSingleton()->ChangeLeaderOfTeam((*curBot)->getTeam());
 
-				//change its status to spawning
+			//add weapon on map
+			int index = 0;
+			Vector2D pos;
+			switch ((*curBot)->getTeam())
+			{
+			case 0:
+				index = 244;
+				pos = Vector2D(70, 60);
+				break;
+			case 1:
+				index = 70;
+				pos = Vector2D(340, 260);
+				break;
+			case 2:
+				index = 275;
+				pos = Vector2D(70, 360);
+				break;
+			default:
+				break;
+			}
+
+			for (auto& weapon : (*curBot)->GetWeaponSys()->GetAllWeapons())
+			{
+				m_pMap->AddWeapon_Giver(weapon, pos, index, (*curBot)->getTeam());
+			}
+
+
+			//change its status to spawning
 			(*curBot)->SetSpawning();
 		}
 

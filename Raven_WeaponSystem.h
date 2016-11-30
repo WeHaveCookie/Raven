@@ -14,6 +14,7 @@
 #include <map>
 #include "2d/vector2d.h"
 #include "Fuzzy/FuzzyModule.h"
+#include <vector>
 
 class Raven_Bot;
 class Raven_Weapon;
@@ -106,6 +107,8 @@ public:
   //returns a pointer to the specified weapon type (if in inventory, null if 
   //not)
   Raven_Weapon* GetWeaponFromInventory(int weapon_type);
+
+  std::vector<int> GetAllWeapons();
 
   //returns the amount of ammo remaining for the specified weapon
   int           GetAmmoRemainingForWeapon(unsigned int weapon_type);

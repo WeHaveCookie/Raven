@@ -26,7 +26,8 @@ Raven_Map::Raven_Map():m_pNavGraph(NULL),
                        m_pSpacePartition(NULL),
                        m_iSizeY(0),
                        m_iSizeX(0),
-                       m_dCellSpaceNeighborhoodRange(0)
+                       m_dCellSpaceNeighborhoodRange(0),
+					   m_indexNode(500)
 {
 }
 //------------------------------ dtor -----------------------------------------
@@ -163,6 +164,23 @@ void Raven_Map::AddWeapon_Giver(int type_of_weapon, std::ifstream& in)
   EntityMgr->RegisterEntity(wg);
 }
 
+void Raven_Map::AddWeapon_Giver(int type_of_weapon, Vector2D pos, int index, int team)
+{
+	Trigger_WeaponGiver* wg = new Trigger_WeaponGiver(pos, 7, index, team);
+
+	wg->SetEntityType(type_of_weapon);
+
+	//add it to the appropriate vectors
+	m_TriggerSystem.Register(wg);
+
+	//let the corresponding navgraph node point to this object
+	NavGraph::NodeType& node = m_pNavGraph->GetNode(wg->GraphNodeIndex());
+
+	node.SetExtraInfo(wg);
+
+	//register the entity 
+	EntityMgr->RegisterEntity(wg);
+}
 
 //------------------------- LoadMap ------------------------------------
 //

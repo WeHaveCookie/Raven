@@ -22,23 +22,30 @@ class Trigger_WeaponGiver : public Trigger_Respawning<Raven_Bot>
 {
 private:
 
-  //vrtex buffers for rocket shape
-  std::vector<Vector2D>         m_vecRLVB;
-  std::vector<Vector2D>         m_vecRLVBTrans;
-  
+	//vertex buffers for rocket shape
+	std::vector<Vector2D>         m_vecRLVB;
+	std::vector<Vector2D>         m_vecRLVBTrans;
+
+	bool m_fromDeadBot;
+	int m_team;
+
 public:
 
-  //this type of trigger is created when reading a map file
-  Trigger_WeaponGiver(std::ifstream& datafile);
+	//this type of trigger is created when reading a map file
+	Trigger_WeaponGiver(std::ifstream& datafile);
 
-  //if triggered, this trigger will call the PickupWeapon method of the
-  //bot. PickupWeapon will instantiate a weapon of the appropriate type.
-  void Try(Raven_Bot*);
-  
-  //draws a symbol representing the weapon type at the trigger's location
-  void Render();
+	Trigger_WeaponGiver(Vector2D pos, double r, int GraphNodeIndex, int team);
 
-  void Read (std::ifstream& is);
+	//if triggered, this trigger will call the PickupWeapon method of the
+	//bot. PickupWeapon will instantiate a weapon of the appropriate type.
+	void Try(Raven_Bot*);
+
+	void deleteTrigger() { SetToBeRemovedFromGame(); }
+
+	//draws a symbol representing the weapon type at the trigger's location
+	void Render();
+
+	void Read(std::ifstream& is);
 };
 
 

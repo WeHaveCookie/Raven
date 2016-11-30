@@ -8,7 +8,7 @@ NumBots = 2
 
 --the number of team in the game
 
-NumTeam = 2
+NumTeam = 3
 
 --this is the maximum number of search cycles allocated to *all* current path
 -- planning searches per update

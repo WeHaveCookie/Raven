@@ -249,6 +249,21 @@ Raven_Weapon* Raven_WeaponSystem::GetWeaponFromInventory(int weapon_type)
   return m_WeaponMap[weapon_type];
 }
 
+std::vector<int> Raven_WeaponSystem::GetAllWeapons()
+{
+	std::vector<int> all_Weapon;
+
+	for (auto& weapon : m_WeaponMap)
+	{
+		if (weapon.second != NULL && weapon.second->GetType() != 9)
+		{
+			all_Weapon.push_back(weapon.second->GetType());
+		}
+	}
+
+	return all_Weapon;
+}
+
 //----------------------- ChangeWeapon ----------------------------------------
 void Raven_WeaponSystem::ChangeWeapon(unsigned int type)
 {

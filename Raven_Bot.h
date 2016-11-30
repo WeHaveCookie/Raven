@@ -159,8 +159,8 @@ public:
   void			ApplyElement(Element::Enum element, double duration);
   void          IncreaseHealth(unsigned int val);
   void          RestoreHealthToMaximum();
-  bool			Slagged() { return (m_elements[Element::slag] > 0);
-}
+
+  bool			Slagged() { return (m_elements[Element::slag] > 0); }
   bool			Fired() { return (m_elements[Element::fire] > 0); }
   bool			Frosted() { return (m_elements[Element::frost] > 0); }
   bool			Poisonned() { return (m_elements[Element::poison] > 0); }
@@ -183,9 +183,9 @@ public:
 
 
   void          SetSpawning(){m_Status = spawning;}
-  void          SetDead(){ m_Status = dead; m_leader = false;  m_elements.clear(); m_iHealth = 0.0f; }
+  void          SetDead() { m_Status = dead; m_leader = false; m_elements.clear(); m_iHealth = 0.0f; }
   void          SetAlive(){m_Status = alive;}
-  void          SetTeam(int color) { m_iTeam = color; }
+  void          SetTeam(int team) { m_iTeam = team; }
   void			SetLeader(bool b) { m_leader = b; }
 
 

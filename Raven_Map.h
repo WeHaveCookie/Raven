@@ -69,7 +69,9 @@ private:
 
   int m_iSizeX;
   int m_iSizeY;
-  
+
+  int m_indexNode;
+
   void  PartitionNavGraph();
 
   //this will hold a pre-calculated lookup table of the cost to travel from
@@ -103,6 +105,8 @@ public:
 
   void    AddSoundTrigger(Raven_Bot* pSoundSource, double range);
 
+  void AddWeapon_Giver(int type_of_weapon, Vector2D pos, int team, int index);
+
   double   CalculateCostToTravelBetweenNodes(int nd1, int nd2)const;
 
   //returns the position of a graph node selected at random
@@ -122,7 +126,6 @@ public:
   int                                GetSizeY()const{return m_iSizeY;}
   int                                GetMaxDimension()const{return Maximum(m_iSizeX, m_iSizeY);}
   double                             GetCellSpaceNeighborhoodRange()const{return m_dCellSpaceNeighborhoodRange;}
-
 };
 
 

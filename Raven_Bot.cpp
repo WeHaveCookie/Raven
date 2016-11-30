@@ -152,7 +152,7 @@ void Raven_Bot::updateElement()
 		}
 		m_timerUpdateElem = TIMER_UPDATE_ELEM;
 	}
-	
+
 	for (auto& elem : m_elements)
 	{
 		if (elem.second > 0)
@@ -273,36 +273,36 @@ bool Raven_Bot::isReadyForTriggerUpdate()const
 //-----------------------------------------------------------------------------
 bool Raven_Bot::HandleMessage(const Telegram& msg)
 {
-  //first see if the current goal accepts the message
-  if (GetBrain()->HandleMessage(msg)) return true;
- 
-  //handle any messages not handles by the goals
-  switch(msg.Msg)
-  {
-  case Msg_TakeThatMF:
-  {
-    //just return if already dead or spawning
-    if (isDead() || isSpawning()) return true;
+	//first see if the current goal accepts the message
+	if (GetBrain()->HandleMessage(msg)) return true;
 
-	auto projInfo = static_cast<ProjectileInfo*>(msg.ExtraInfo);
-
-    //the extra info field of the telegram carries the amount of damage
-	ApplyElement(projInfo->element, projInfo->duration);
-	ReduceHealth(projInfo->damage);
-
-	//if this bot is now dead let the shooter know
-	if (isDead())
+	//handle any messages not handles by the goals
+	switch (msg.Msg)
 	{
-		Dispatcher->DispatchMsg(SEND_MSG_IMMEDIATELY,
-			ID(),
-			msg.Sender,
-			Msg_YouGotMeYouSOB,
-			NO_ADDITIONAL_INFO);
+	case Msg_TakeThatMF:
+	{
+		//just return if already dead or spawning
+		if (isDead() || isSpawning()) return true;
+
+		auto projInfo = static_cast<ProjectileInfo*>(msg.ExtraInfo);
+
+		//the extra info field of the telegram carries the amount of damage
+		ApplyElement(projInfo->element, projInfo->duration);
+		ReduceHealth(projInfo->damage);
+
+		//if this bot is now dead let the shooter know
+		if (isDead())
+		{
+			Dispatcher->DispatchMsg(SEND_MSG_IMMEDIATELY,
+				ID(),
+				msg.Sender,
+				Msg_YouGotMeYouSOB,
+				NO_ADDITIONAL_INFO);
+		}
+		return true;
 	}
-    return true;
-  }
-  case Msg_YouGotMeYouSOB:
-    
+	case Msg_YouGotMeYouSOB:
+
 		IncrementScore();
 
 		//the bot this bot has just killed should be removed as the target
@@ -393,7 +393,7 @@ void Raven_Bot::ReduceHealth(float val)
 	{
 		val *= 2.0f;
 	}
-  m_iHealth -= val;
+	m_iHealth -= val;
 
 
 	if (m_iHealth <= 0.0f)
@@ -402,7 +402,7 @@ void Raven_Bot::ReduceHealth(float val)
 	}
 
 
-  m_bHit = true;
+	m_bHit = true;
 
 	m_iNumUpdatesHitPersistant = (int)(FrameRate * script->GetDouble("HitFlashTime"));
 }
@@ -571,13 +571,14 @@ void Raven_Bot::ChangePenWithAffect()
 	if (NoElemAffect())
 	{
 		m_displayedElement = Element::neutral;
-	} else if (m_timerChangeElemDisplayed <= 0)
+	}
+	else if (m_timerChangeElemDisplayed <= 0)
 	{
 		int counter = 0;
 		m_displayedElement += 1;
-		for (m_displayedElement; counter < (int)m_elements.size(); m_displayedElement+=1)
+		for (m_displayedElement; counter < (int)m_elements.size(); m_displayedElement += 1)
 		{
-			if (m_elements[m_displayedElement] > 0 )
+			if (m_elements[m_displayedElement] > 0)
 			{
 				break;
 			}
@@ -586,9 +587,9 @@ void Raven_Bot::ChangePenWithAffect()
 
 		m_timerChangeElemDisplayed = TIMER_SWITCH_ELEM_DISPLAYED;
 	}
-	
-	
-	
+
+
+
 	switch (m_displayedElement)
 	{
 	case Element::fire:
@@ -618,66 +619,66 @@ void Raven_Bot::ChangePenWithAffect()
 //------------------------------------------------------------------------
 void Raven_Bot::Render()
 {
-  //when a bot is hit by a projectile this value is set to a constant user
-  //defined value which dictates how long the bot should have a thick red
-  //circle drawn around it (to indicate it's been hit) The circle is drawn
-  //as long as this value is positive. (see Render)
-  m_iNumUpdatesHitPersistant--;
+	//when a bot is hit by a projectile this value is set to a constant user
+	//defined value which dictates how long the bot should have a thick red
+	//circle drawn around it (to indicate it's been hit) The circle is drawn
+	//as long as this value is positive. (see Render)
+	m_iNumUpdatesHitPersistant--;
 
 
-  if (isDead() || isSpawning()) return;
-  
-  gdi->SetPenColor(TeamManager::GetSingleton()->getColor(getTeam()));
-  //gdi->BluePen();
-  
-  
-  m_vecBotVBTrans = WorldTransform(m_vecBotVB,
-                                   Pos(),
-                                   Facing(),
-                                   Facing().Perp(),
-                                   Scale());
+	if (isDead() || isSpawning()) return;
 
-  gdi->ClosedShape(m_vecBotVBTrans);
-  
-  ChangePenWithAffect();
-  //draw the head
-  
-  gdi->Circle(Pos(), 6.0 * Scale().x);
+	gdi->SetPenColor(TeamManager::GetSingleton()->getColor(getTeam()));
+	//gdi->BluePen();
 
 
-  //render the bot's weapon
-  m_pWeaponSys->RenderCurrentWeapon();
+	m_vecBotVBTrans = WorldTransform(m_vecBotVB,
+		Pos(),
+		Facing(),
+		Facing().Perp(),
+		Scale());
 
-  //render a thick red circle if the bot gets hit by a weapon
-  if (m_bHit)
-  {
-    gdi->ThickRedPen();
-    gdi->HollowBrush();
-    gdi->Circle(m_vPosition, BRadius()+1);
+	gdi->ClosedShape(m_vecBotVBTrans);
 
-    if (m_iNumUpdatesHitPersistant <= 0)
-    {
-      m_bHit = false;
-    }
-  }
+	ChangePenWithAffect();
+	//draw the head
 
-  gdi->TransparentText();
-  gdi->TextColor(0,255,0);
+	gdi->Circle(Pos(), 6.0 * Scale().x);
 
-  if (UserOptions->m_bShowBotIDs)
-  {
-    gdi->TextAtPos(Pos().x -10, Pos().y-20, ttos(ID()));
-  }
 
-  if (UserOptions->m_bShowBotHealth)
-  {
-    gdi->TextAtPos(Pos().x-40, Pos().y-5, "H:"+ ttos((int)Health()));
-  }
+	//render the bot's weapon
+	m_pWeaponSys->RenderCurrentWeapon();
 
-  if (UserOptions->m_bShowScore)
-  {
-    gdi->TextAtPos(Pos().x-40, Pos().y+10, "Scr:"+ ttos(Score()));
-  }    
+	//render a thick red circle if the bot gets hit by a weapon
+	if (m_bHit)
+	{
+		gdi->ThickRedPen();
+		gdi->HollowBrush();
+		gdi->Circle(m_vPosition, BRadius() + 1);
+
+		if (m_iNumUpdatesHitPersistant <= 0)
+		{
+			m_bHit = false;
+		}
+	}
+
+	gdi->TransparentText();
+	gdi->TextColor(0, 255, 0);
+
+	if (UserOptions->m_bShowBotIDs)
+	{
+		gdi->TextAtPos(Pos().x - 10, Pos().y - 20, ttos(ID()));
+	}
+
+	if (UserOptions->m_bShowBotHealth)
+	{
+		gdi->TextAtPos(Pos().x - 40, Pos().y - 5, "H:" + ttos((int)Health()));
+	}
+
+	if (UserOptions->m_bShowScore)
+	{
+		gdi->TextAtPos(Pos().x - 40, Pos().y + 10, "Scr:" + ttos(Score()));
+	}
 
 }
 
