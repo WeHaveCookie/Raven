@@ -226,8 +226,11 @@
     <ClCompile Include="armory\Weapon_MediRifle.cpp" />
     <ClCompile Include="armory\Weapon_SlagSniper.cpp" />
     <ClCompile Include="goals\FollowLeader_Evaluator.cpp" />
+<<<<<<< HEAD
     <ClCompile Include="goals\Goal_DodgeFollowPath.cpp" />
     <ClCompile Include="goals\Goal_DodgeGetItem.cpp" />
+=======
+>>>>>>> 8e7b59e2962ac89926f442cdd806f189de819168
     <ClCompile Include="goals\Goal_FollowLeader.cpp" />
     <ClCompile Include="main.cpp">
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -556,8 +559,11 @@
     <ClInclude Include="armory\Weapon_MediRifle.h" />
     <ClInclude Include="armory\Weapon_SlagSniper.h" />
     <ClInclude Include="goals\FollowLeader_Evaluator.h" />
+<<<<<<< HEAD
     <ClInclude Include="goals\Goal_DodgeFollowPath.h" />
     <ClInclude Include="goals\Goal_DodgeGetItem.h" />
+=======
+>>>>>>> 8e7b59e2962ac89926f442cdd806f189de819168
     <ClInclude Include="goals\Goal_FollowLeader.h" />
     <ClInclude Include="Raven_Bot.h" />
     <ClInclude Include="Raven_Game.h" />

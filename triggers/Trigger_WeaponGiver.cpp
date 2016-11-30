@@ -49,7 +49,7 @@ Trigger_WeaponGiver::Trigger_WeaponGiver(Vector2D pos, double r, int GraphNodeIn
 	//create this trigger's region of fluence
 	AddCircularTriggerRegion(Pos(), script->GetDouble("DefaultGiverTriggerRange"));
 
-	SetRespawnDelay((unsigned int)(0 * FrameRate));
+	SetRespawnDelay(0);
 
 
 	//create the vertex buffer for the rocket shape
@@ -72,26 +72,17 @@ Trigger_WeaponGiver::Trigger_WeaponGiver(Vector2D pos, double r, int GraphNodeIn
 
 void Trigger_WeaponGiver::Try(Raven_Bot* pBot)
 {
-	if (m_fromDeadBot)
+	if (this->isActive() && this->isTouchingTrigger(pBot->Pos(), pBot->BRadius()))
 	{
-// 		if (this->isActive() && this->isTouchingTrigger(pBot->Pos(), pBot->BRadius()) && m_team == pBot->getTeam())
-		if (this->isActive() && this->isTouchingTrigger(pBot->Pos(), pBot->BRadius()))
-		{
-			pBot->GetWeaponSys()->AddWeapon(EntityType());
+		pBot->GetWeaponSys()->AddWeapon(EntityType());
 
-			Deactivate();
+		Deactivate();
+		if (m_fromDeadBot)
+		{
 			deleteTrigger();
 		}
 	} 
-	else
-	{
-		if (this->isActive() && this->isTouchingTrigger(pBot->Pos(), pBot->BRadius()))
-		{
-			pBot->GetWeaponSys()->AddWeapon(EntityType());
 
-			Deactivate();
-		}
-	}
 }
 
 

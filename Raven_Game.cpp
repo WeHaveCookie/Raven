@@ -173,7 +173,7 @@ void Raven_Game::Update()
 
 			// Change leader
 			TeamManager::GetSingleton()->ChangeLeaderOfTeam((*curBot)->getTeam());
-
+			(*curBot)->SetLeader(false);
 			//add weapon on map
 			int index = 0;
 			Vector2D pos;
