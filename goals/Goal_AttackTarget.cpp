@@ -36,7 +36,7 @@ void Goal_AttackTarget::Activate()
   if (m_pOwner->GetTargetSys()->isTargetShootable())
   {
     //if the bot has space to strafe then do so
-    if (m_pOwner->GetWeaponSys()->GetCurrentWeapon()->GetType() != type_medi_rifle||m_pOwner->smartDodge())
+    if (m_pOwner->GetWeaponSys()->GetCurrentWeapon()->GetType() != type_medi_rifle|| m_pOwner->smartDodge())
     {
       AddSubgoal(new Goal_DodgeSideToSide(m_pOwner));
     }

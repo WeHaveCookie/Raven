@@ -1,4 +1,4 @@
-#include "Goal_FollowPath.h"
+#include "Goal_DodgeFollowPath.h"
 #include "../Raven_Bot.h"
 #include "../Raven_Game.h"
 
@@ -10,8 +10,8 @@
 
 //------------------------------ ctor -----------------------------------------
 //-----------------------------------------------------------------------------
-Goal_FollowPath::
-Goal_FollowPath(Raven_Bot*          pBot,
+Goal_DodgeFollowPath::
+Goal_DodgeFollowPath(Raven_Bot*          pBot,
                 std::list<PathEdge> path):Goal_Composite<Raven_Bot>(pBot, goal_follow_path),
                                                   m_Path(path)
 {
@@ -20,7 +20,7 @@ Goal_FollowPath(Raven_Bot*          pBot,
 
 //------------------------------ Activate -------------------------------------
 //-----------------------------------------------------------------------------
-void Goal_FollowPath::Activate()
+void Goal_DodgeFollowPath::Activate()
 {
   m_iStatus = active;
   
@@ -37,7 +37,7 @@ void Goal_FollowPath::Activate()
   {
   case NavGraphEdge::normal:
     {
-      AddSubgoal(new Goal_TraverseEdge(m_pOwner, edge, m_Path.empty(),false));
+      AddSubgoal(new Goal_TraverseEdge(m_pOwner, edge, m_Path.empty(),true));
     }
 
     break;
@@ -74,7 +74,7 @@ void Goal_FollowPath::Activate()
 
 //-------------------------- Process ------------------------------------------
 //-----------------------------------------------------------------------------
-int Goal_FollowPath::Process()
+int Goal_DodgeFollowPath::Process()
 {
   //if status is inactive, call Activate()
   ActivateIfInactive();
@@ -93,7 +93,7 @@ int Goal_FollowPath::Process()
  
 //---------------------------- Render -----------------------------------------
 //-----------------------------------------------------------------------------
-void Goal_FollowPath::Render()
+void Goal_DodgeFollowPath::Render()
 { 
   //render all the path waypoints remaining on the path list
   std::list<PathEdge>::iterator it;

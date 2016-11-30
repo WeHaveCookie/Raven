@@ -565,6 +565,38 @@ bool Raven_Bot::canStepBackward(Vector2D& PositionOfStep)const
 	return canWalkTo(PositionOfStep);
 }
 
+bool Raven_Bot::canDeviatePathRight(Vector2D& PositionOfStep)const
+{
+	static const double StepDistance = BRadius() * 2;
+
+	std::list<PathEdge>  m_Path;
+	m_Path = m_pPathPlanner->GetPath();
+
+	PathEdge edge = m_Path.front();
+	//m_Path.pop_front();
+
+	//PositionOfStep = Pos() + Facing().Perp() * StepDistance + Facing().Perp() * BRadius();
+	PositionOfStep = edge.Destination();
+
+	return canWalkTo(PositionOfStep);
+}
+
+bool Raven_Bot::canDeviatePathLeft(Vector2D& PositionOfStep)const
+{
+	static const double StepDistance = BRadius() * 2;
+
+	std::list<PathEdge>  m_Path;
+	m_Path = m_pPathPlanner->GetPath();
+
+	PathEdge edge = m_Path.front();
+	//m_Path.pop_front();
+
+	//PositionOfStep = Pos() + Facing().Perp() * StepDistance + Facing().Perp() * BRadius();
+	PositionOfStep = edge.Destination();
+
+	return canWalkTo(PositionOfStep);
+}
+
 bool Raven_Bot::allWithinFOV(){
 	std::list<Raven_Bot*> shootersList;
 	shootersList = GetSensoryMem()->GetListOfRecentlySensedOpponents();
@@ -577,7 +609,7 @@ bool Raven_Bot::allWithinFOV(){
 
 bool Raven_Bot::smartDodge(){
 	Vector2D dummy;
-	return (canStepLeft(dummy) || canStepRight(dummy)) && allWithinFOV();
+	return (canStepLeft(dummy) || canStepRight(dummy)) && !allWithinFOV();
 }
 
 void Raven_Bot::ChangePenWithAffect()

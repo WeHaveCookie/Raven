@@ -227,6 +227,9 @@ public:
   bool          canStepForward(Vector2D& PositionOfStep)const;
   bool          canStepBackward(Vector2D& PositionOfStep)const;
 
+  bool          canDeviatePathLeft(Vector2D& PositionOfStep)const;
+  bool          canDeviatePathRight(Vector2D& PositionOfStep)const;
+
   //Samrter Dodges When Shooting
   bool	allWithinFOV();
   bool	smartDodge();

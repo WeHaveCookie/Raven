@@ -42,7 +42,7 @@ void Goal_NegotiateDoor::Activate()
   //be added in reverse order.
   
   //first the goal to traverse the edge that passes through the door
-  AddSubgoal(new Goal_TraverseEdge(m_pOwner, m_PathEdge, m_bLastEdgeInPath));
+  AddSubgoal(new Goal_TraverseEdge(m_pOwner, m_PathEdge, m_bLastEdgeInPath,false));
 
   //next, the goal that will move the bot to the beginning of the edge that
   //passes through the door

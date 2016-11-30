@@ -226,6 +226,7 @@
     <ClCompile Include="armory\Weapon_MediRifle.cpp" />
     <ClCompile Include="armory\Weapon_SlagSniper.cpp" />
     <ClCompile Include="goals\FollowLeader_Evaluator.cpp" />
+    <ClCompile Include="goals\Goal_DodgeFollowPath.cpp" />
     <ClCompile Include="goals\Goal_DodgeGetItem.cpp" />
     <ClCompile Include="goals\Goal_FollowLeader.cpp" />
     <ClCompile Include="main.cpp">
@@ -555,6 +556,7 @@
     <ClInclude Include="armory\Weapon_MediRifle.h" />
     <ClInclude Include="armory\Weapon_SlagSniper.h" />
     <ClInclude Include="goals\FollowLeader_Evaluator.h" />
+    <ClInclude Include="goals\Goal_DodgeFollowPath.h" />
     <ClInclude Include="goals\Goal_DodgeGetItem.h" />
     <ClInclude Include="goals\Goal_FollowLeader.h" />
     <ClInclude Include="Raven_Bot.h" />

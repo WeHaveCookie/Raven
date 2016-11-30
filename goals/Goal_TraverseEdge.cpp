@@ -17,14 +17,17 @@
 //-----------------------------------------------------------------------------
 Goal_TraverseEdge::Goal_TraverseEdge(Raven_Bot* pBot,
                                      PathEdge   edge,
-                                     bool       LastEdge):
+                                     bool       LastEdge,
+									 bool dodging):
 
                                 Goal<Raven_Bot>(pBot, goal_traverse_edge),
                                 m_Edge(edge),
                                 m_dTimeExpected(0.0),
                                 m_bLastEdgeInPath(LastEdge)
                                 
-{}
+{
+	dodge = dodging;
+}
 
                             
                                              
@@ -52,6 +55,25 @@ void Goal_TraverseEdge::Activate()
    
     break;
   }
+
+  //Calulate the dodgePosition of the bot
+  Vector2D dodgeTarget;
+  if (dodge){
+	  debug_con << "BOT " << m_pOwner->ID() << " IS DODGING!!" << "";
+	  if (face){
+		  dodgeTarget = m_Edge.Destination() + m_pOwner->Facing().Perp() * (m_pOwner->BRadius() * 2) + m_pOwner->Facing().Perp() * m_pOwner->BRadius();
+	  }
+	  else {
+		  dodgeTarget = m_Edge.Destination() - m_pOwner->Facing().Perp() * (m_pOwner->BRadius() * 2) - m_pOwner->Facing().Perp() * m_pOwner->BRadius();
+	  }
+	  if (!m_pOwner->canWalkTo(dodgeTarget)){
+		  dodgeTarget = m_Edge.Destination();
+	  }
+  }
+  else {
+	  dodgeTarget = m_Edge.Destination();
+  }
+
   
 
   //record the time the bot starts this goal
@@ -59,16 +81,19 @@ void Goal_TraverseEdge::Activate()
   
   //calculate the expected time required to reach the this waypoint. This value
   //is used to determine if the bot becomes stuck 
-  m_dTimeExpected = m_pOwner->CalculateTimeToReachPosition(m_Edge.Destination());
+  //m_dTimeExpected = m_pOwner->CalculateTimeToReachPosition(m_Edge.Destination());
+  m_dTimeExpected = m_pOwner->CalculateTimeToReachPosition(dodgeTarget);
   
   //factor in a margin of error for any reactive behavior
   static const double MarginOfError = 2.0;
 
   m_dTimeExpected += MarginOfError;
 
-
   //set the steering target
-  m_pOwner->GetSteering()->SetTarget(m_Edge.Destination());
+
+  m_pOwner->GetSteering()->SetTarget(dodgeTarget);
+
+  face = !face;
 
   //Set the appropriate steering behavior. If this is the last edge in the path
   //the bot should arrive at the position it points to, else it should seek

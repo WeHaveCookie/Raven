@@ -7,8 +7,9 @@
 #include "..\Raven_Messages.h"
 
 #include "Goal_Wander.h"
+#include "Goal_DodgeFollowPath.h"
 #include "Goal_FollowPath.h"
-#include "Goal_DodgeSideToSide.h"
+#include "Goal_DodgeGetItem.h"
 #include "../Raven_SensoryMemory.h"
 
 
@@ -103,13 +104,15 @@ bool Goal_GetItem::HandleMessage(const Telegram& msg)
       //clear any existing goals
       RemoveAllSubgoals();
 
-      AddSubgoal(new Goal_FollowPath(m_pOwner,
-                                     m_pOwner->GetPathPlanner()->GetPath()));
+     
 	  //Dodge only if the bot hear guns's firesounds
-	  std::list<Raven_Bot*> shootersList;
-	  shootersList = m_pOwner->GetSensoryMem()->GetListOfRecentlySensedOpponents();
-	  if (shootersList.size() != 0){
-		  AddSubgoal(new Goal_DodgeSideToSide(m_pOwner));
+	  if (m_pOwner->smartDodge()){
+		  AddSubgoal(new Goal_DodgeFollowPath(m_pOwner,
+			  m_pOwner->GetPathPlanner()->GetPath()));
+	  }
+	  else {
+		  AddSubgoal(new Goal_FollowPath(m_pOwner,
+			  m_pOwner->GetPathPlanner()->GetPath()));
 	  }
 
       //get the pointer to the item

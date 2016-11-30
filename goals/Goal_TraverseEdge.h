@@ -27,11 +27,15 @@ private:
   //returns true if the bot gets stuck
   bool      isStuck()const;
 
+  bool face = RandBool();
+  bool dodge;
+
 public:
 
   Goal_TraverseEdge(Raven_Bot* pBot,
                     PathEdge   edge,
-                    bool       LastEdge); 
+                    bool       LastEdge,
+					bool dodging); 
 
   //the usual suspects
   void Activate();
